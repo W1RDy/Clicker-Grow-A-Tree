@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour, IService, IGrowable
 {
+    [SerializeField] SpawnBranchSettings[] _spawnBranchSettings;
     [SerializeField] private Trunk _trunk;
     [SerializeField] private TrunkPart _trunkPartPrefab;
-    private Branch[] branches;
+    private List<Branch> _branches = new List<Branch>();
     private float _height = 0;
-    private Action<Transform[]> _branchMarkersCallback;
+    private Action<Transform> _trunkPartCallback;
     private FactoryController _branchFactoryController;
 
     private void Awake()
@@ -17,9 +18,8 @@ public class Tree : MonoBehaviour, IService, IGrowable
         var branchContainer = new GameObject(name + "Branches");
         branchContainer.transform.SetParent(transform);
         _branchFactoryController = new FactoryController(new BranchFactory(), branchContainer);
-        _branchMarkersCallback = markers => SpawnBranches(markers);
-        Debug.Log(_branchMarkersCallback);
-        _trunk.InitializeTrunk(_trunkPartPrefab, _branchMarkersCallback);
+        _trunkPartCallback = relativeObj => SpawnBranches(relativeObj);
+        _trunk.InitializeTrunk(_trunkPartPrefab, _trunkPartCallback);
     }
 
     public void Grow(float growValue)
@@ -29,16 +29,22 @@ public class Tree : MonoBehaviour, IService, IGrowable
         GrowBranches(growValue);
     }
 
-    private void SpawnBranches(Transform[] markers)
+    private void SpawnBranches(Transform relativeObj)
     {
-        branches = _branchFactoryController.SpawnByFactory(markers) as Branch[];
+        var newBranches = _branchFactoryController.SpawnByFactoryWithRandomSettings(_spawnBranchSettings[0], _spawnBranchSettings[1], 2, relativeObj) as Branch[];
+        foreach (var branch in newBranches)
+        {
+            _branches.Add(branch);
+        }
     }
 
     private void GrowBranches(float growValue)
     {
+        var branches = new List<Branch>(_branches);
         foreach (Branch branch in branches)
         {
-            if (GetTopPoint().y > branch.transform.position.y)
+            if (branch == null) _branches.Remove(branch);
+            else if (GetTopPoint().y > branch.transform.position.y)
             {
                 branch.Grow(growValue * branch.Height);
             }

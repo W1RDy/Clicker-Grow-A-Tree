@@ -6,11 +6,11 @@ public class Trunk : MonoBehaviour, IGrowable
     private TrunkPart _trunkPartPrefab;
     private float _maxHeight = 0;
     private TrunkPart _heighestTrunkPart;
-    private Action<Transform[]> _markersCallback;
+    private Action<Transform> _trunkPartCallback;
 
-    public void InitializeTrunk(TrunkPart trunkPartPrefab, Action<Transform[]> markersCallback)
+    public void InitializeTrunk(TrunkPart trunkPartPrefab, Action<Transform> trunkPartCallback)
     {
-        _markersCallback = markersCallback;
+        _trunkPartCallback = trunkPartCallback;
         _trunkPartPrefab = trunkPartPrefab;
         AddNewTrunkPart();
     }
@@ -27,7 +27,7 @@ public class Trunk : MonoBehaviour, IGrowable
         _heighestTrunkPart = Instantiate(_trunkPartPrefab, Vector2.zero, Quaternion.identity);
         _heighestTrunkPart.transform.SetParent(transform);
         _heighestTrunkPart.transform.localPosition = new Vector2(0, spawnHeight);
-        _heighestTrunkPart.InitializeTrunk(_markersCallback);
+        _heighestTrunkPart.InitializeTrunk(_trunkPartCallback);
 
         _maxHeight = _heighestTrunkPart.transform.localPosition.y + _heighestTrunkPart.Height;
     }
