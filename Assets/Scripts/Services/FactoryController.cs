@@ -23,8 +23,11 @@ public class FactoryController
         {
             var rotation = new Quaternion
             {
-                eulerAngles = spawnSettings[i].IsSpawnToRight ? new Vector3(0, 0, -spawnSettings[i].SpawnRot) : new Vector3(0, 0, spawnSettings[i].SpawnRot)
+                eulerAngles = new Vector3(0, 0, spawnSettings[i].SpawnRot)
             };
+            if (spawnSettings[i].IsSpawnToRight) rotation = Quaternion.Inverse(rotation);
+            rotation = relativeObj.rotation * rotation;
+
             var position = relativeObj.TransformPoint(spawnSettings[i].SpawnPos);
 
             spawnedObjs[i] = _factory.Create(position, rotation, _container.transform) as Branch;

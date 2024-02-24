@@ -2,13 +2,20 @@
 
 public class BranchFactory : IFactory
 {
-    private const string BranchPath = "Branch";
+    private const string BranchPath = "BranchLevel";
 
     private Branch _branchPrefab;
+    private int _branchLevel;
+
+    public BranchFactory(int branchLevel)
+    {
+        _branchLevel = branchLevel;
+    }
 
     public void LoadResources()
     {
-        _branchPrefab = Resources.Load<Branch>(BranchPath);
+
+        _branchPrefab = Resources.Load<Branch>(BranchPath + _branchLevel);
         Debug.Log("Branch");
     }
 

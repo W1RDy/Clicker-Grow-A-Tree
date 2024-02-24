@@ -457,11 +457,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5df0ad1e1f179f45978cbe7ff49de99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnSettingsConfig: {fileID: 11400000, guid: 06c8f4a1ad0626d49bb1e197977436e7, type: 2}
+  _spawnSettingsConfig:
+  - {fileID: 11400000, guid: 06c8f4a1ad0626d49bb1e197977436e7, type: 2}
+  - {fileID: 11400000, guid: 62685a1eb571ccd4a8716d2f49699891, type: 2}
   _trunk: {fileID: 1814079766}
   _trunkPartPrefab: {fileID: 5850813300958775615, guid: ed44abb862b6a4447965acd8e8ee89f1, type: 3}
-  _branchCount: 2
-  _distanceBetweenBranches: 1.2
+  _branchingValue: 2
 --- !u!1 &885377294
 GameObject:
   m_ObjectHideFlags: 0

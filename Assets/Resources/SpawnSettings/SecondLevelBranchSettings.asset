@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1da6ccc9f32f53c40a42e4a0b9caf061, type: 3}
-  m_Name: FirstLevelBranchSettings
+  m_Name: SecondLevelBranchSettings
   m_EditorClassIdentifier: 
   _minBranchSetting:
-    _spawnPos: {x: -1.33871, y: -0.42}
+    _spawnPos: {x: -1.08, y: -0.21}
     _spawnRot: 60
     _isSpawnToRight: 0
   _maxBranchSetting:
-    _spawnPos: {x: 1.21, y: 0.44}
+    _spawnPos: {x: 0.97, y: 0.28}
     _spawnRot: 80
     _isSpawnToRight: 1
   _distanceBetweenBranch: 1.2
