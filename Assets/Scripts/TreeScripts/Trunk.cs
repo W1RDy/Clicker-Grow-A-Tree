@@ -31,4 +31,9 @@ public class Trunk : MonoBehaviour, IGrowable
 
         _maxHeight = _heighestTrunkPart.transform.localPosition.y + _heighestTrunkPart.Height;
     }
+
+    public Vector2 GetFilledTopLocalPoint()
+    {
+        return _heighestTrunkPart.GetFilledTopLocalPoint();
+    }
 }

@@ -5,4 +5,5 @@ using UnityEngine;
 public interface IGrowable
 {
     public void Grow(float growValue);
+    public Vector2 GetFilledTopLocalPoint();
 }

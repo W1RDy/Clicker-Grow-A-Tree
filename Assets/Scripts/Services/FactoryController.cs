@@ -7,7 +7,7 @@ public class FactoryController
 {
     private IFactory _factory;
     private GameObject _container;
-    private List<Vector2> _busyPositions = new List<Vector2>();
+    private List<Vector2> _busyPositions = new List<Vector2>(); // need to optimise
 
     public FactoryController(IFactory factory, GameObject container)
     {
@@ -27,7 +27,6 @@ public class FactoryController
             };
             if (spawnSettings[i].IsSpawnToRight) rotation = Quaternion.Inverse(rotation);
             rotation = relativeObj.rotation * rotation;
-
             var position = relativeObj.TransformPoint(spawnSettings[i].SpawnPos);
 
             spawnedObjs[i] = _factory.Create(position, rotation, _container.transform) as Branch;
@@ -65,23 +64,24 @@ public class FactoryController
         {
             tryCount++;
             var spawnPosX = isSpawnToRight ? maxSpawnBranchSettings.SpawnPos.x : minSpawnBranchSettings.SpawnPos.x;
+            
             var spawnPosY = Random.Range(minSpawnBranchSettings.SpawnPos.y, maxSpawnBranchSettings.SpawnPos.y);
             spawnRot = Random.Range(minSpawnBranchSettings.SpawnRot, maxSpawnBranchSettings.SpawnRot);
 
             if (tryCount < 50)
             {
-                spawnPos = new Vector2(spawnPosX, spawnPosY);
+                spawnPos = new Vector2(spawnPosX / relativeObj.localScale.x, spawnPosY / relativeObj.localScale.y);
                 if (CheckPosition(spawnPos, relativeObj, spawnSettingsConfig.DistanceBetweenBranch)) break;
             }
             else
             {
                 Debug.Log("All pos is busy!");
-                spawnPos = new Vector2(spawnPosX, maxSpawnBranchSettings.SpawnPos.y + spawnSettingsConfig.DistanceBetweenBranch);
+                spawnPos = new Vector2(spawnPosX / relativeObj.localScale.x, (maxSpawnBranchSettings.SpawnPos.y + spawnSettingsConfig.DistanceBetweenBranch) / relativeObj.localScale.y);
                 break;
             }
         }
 
-        _busyPositions.Add(relativeObj.TransformPoint(spawnPos));
+        _busyPositions.Add(relativeObj.TransformPoint(spawnPos / relativeObj.localScale.x));
 
         return new SpawnBranchSettings(spawnPos, spawnRot, isSpawnToRight);
     }

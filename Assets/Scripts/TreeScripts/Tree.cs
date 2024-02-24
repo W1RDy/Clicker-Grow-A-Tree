@@ -64,6 +64,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
         var nextBranchLevel = branchLevel + 1;
         foreach (var branch in newBranches)
         {
+            branch.InitializeBranch(relativeObj);
             _branches.Add(branch);
             SpawnBranches(branch.transform, nextBranchLevel);
         }
@@ -75,10 +76,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
         foreach (Branch branch in branches)
         {
             if (branch == null) _branches.Remove(branch);
-            else if (GetTopPoint().y > branch.transform.position.y)
-            {
-                branch.Grow(growValue * branch.Height);
-            }
+            else branch.Grow(growValue * branch.Height);
         }
     }
 
@@ -87,7 +85,12 @@ public class Tree : MonoBehaviour, IService, IGrowable
         return _height;
     }
 
-    public Vector2 GetTopPoint()
+    public Vector2 GetFilledTopLocalPoint()
+    {
+        return _trunk.GetFilledTopLocalPoint();
+    }
+
+    public Vector2 GetTopTreePoint()
     {
         var topPoint = _trunk.transform.TransformPoint(new Vector2(0, -_trunkPartPrefab.transform.localScale.y / 2 + _height));
         return topPoint;
