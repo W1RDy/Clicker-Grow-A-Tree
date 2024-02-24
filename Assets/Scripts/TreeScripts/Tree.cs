@@ -5,16 +5,20 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour, IService, IGrowable
 {
-    [SerializeField] SpawnBranchSettings[] _spawnBranchSettings;
+    [SerializeField] BranchSpawnSettingsConfig _spawnSettingsConfig;
     [SerializeField] private Trunk _trunk;
     [SerializeField] private TrunkPart _trunkPartPrefab;
-    private List<Branch> _branches = new List<Branch>();
+
     private float _height = 0;
-    private Action<Transform> _trunkPartCallback;
+    private List<Branch> _branches = new List<Branch>();
+    private BranchSpawnSettingsConfig _spawnSettings;
+
     private FactoryController _branchFactoryController;
+    private Action<Transform> _trunkPartCallback;
 
     private void Awake()
     {
+        _spawnSettings = Instantiate(_spawnSettingsConfig);
         var branchContainer = new GameObject(name + "Branches");
         branchContainer.transform.SetParent(transform);
         _branchFactoryController = new FactoryController(new BranchFactory(), branchContainer);
@@ -31,7 +35,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
 
     private void SpawnBranches(Transform relativeObj)
     {
-        var newBranches = _branchFactoryController.SpawnByFactoryWithRandomSettings(_spawnBranchSettings[0], _spawnBranchSettings[1], 2, relativeObj) as Branch[];
+        var newBranches = _branchFactoryController.SpawnByFactoryWithRandomSettings(_spawnSettings, relativeObj) as Branch[];
         foreach (var branch in newBranches)
         {
             _branches.Add(branch);

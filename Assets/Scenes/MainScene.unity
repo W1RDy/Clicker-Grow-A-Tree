@@ -457,15 +457,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5df0ad1e1f179f45978cbe7ff49de99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnBranchSettings:
-  - _spawnPos: {x: -1.33871, y: -0.42}
-    _spawnRot: 60
-    _isSpawnToRight: 0
-  - _spawnPos: {x: 1.21, y: 0.44}
-    _spawnRot: 80
-    _isSpawnToRight: 1
+  _spawnSettingsConfig: {fileID: 11400000, guid: 06c8f4a1ad0626d49bb1e197977436e7, type: 2}
   _trunk: {fileID: 1814079766}
   _trunkPartPrefab: {fileID: 5850813300958775615, guid: ed44abb862b6a4447965acd8e8ee89f1, type: 3}
+  _branchCount: 2
+  _distanceBetweenBranches: 1.2
 --- !u!1 &885377294
 GameObject:
   m_ObjectHideFlags: 0
