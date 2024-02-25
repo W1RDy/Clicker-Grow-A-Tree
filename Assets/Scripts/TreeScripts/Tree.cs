@@ -16,7 +16,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
     private GrowSettings _growSettings;
 
     private Action<Transform> _trunkPartCallback;
-    public event Action<Branch[]> SpawnNewBranches;
+    public event Action<int, Branch[]> SpawnNewBranches;
 
     public void InitializeTree(GrowSettings growSettings)
     {
@@ -73,10 +73,10 @@ public class Tree : MonoBehaviour, IService, IGrowable
         var nextBranchLevel = branchLevel + 1;
         foreach (var branch in newBranches)
         {
-            branch.InitializeBranch(relativeObj);
+            branch.InitializeBranch(relativeObj, branchLevel);
             SpawnBranches(branch.transform, nextBranchLevel);
         }
-        SpawnNewBranches?.Invoke(newBranches);
+        SpawnNewBranches?.Invoke(branchLevel, newBranches);
     }
 
     public float GetHeight()
@@ -89,9 +89,23 @@ public class Tree : MonoBehaviour, IService, IGrowable
         return _trunk.GetFilledTopLocalPoint();
     }
 
-    public Vector2 GetTopTreePoint()
+    public Vector2 GetFilledTopGlobalPoint()
     {
-        var topPoint = _trunk.transform.TransformPoint(new Vector2(0, -_trunkPartPrefab.transform.localScale.y / 2 + _height));
-        return topPoint;
+        return _trunk.GetFilledTopGlobalPoint();
+    }
+
+    public float GetMaxHeight()
+    {
+        return _trunk.GetMaxHeight();
+    }
+
+    public IGrowable GetRelativeGrowable()
+    {
+        return _trunk.GetRelativeGrowable();
+    }
+
+    public Transform GetGrowableTransform()
+    {
+        return _trunk.GetGrowableTransform();
     }
 }

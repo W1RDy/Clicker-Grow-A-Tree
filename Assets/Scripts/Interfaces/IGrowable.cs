@@ -6,4 +6,8 @@ public interface IGrowable
 {
     public void Grow(float growValue);
     public Vector2 GetFilledTopLocalPoint();
+    public Vector2 GetFilledTopGlobalPoint();
+    public float GetMaxHeight();
+    public IGrowable GetRelativeGrowable();
+    public Transform GetGrowableTransform();
 }

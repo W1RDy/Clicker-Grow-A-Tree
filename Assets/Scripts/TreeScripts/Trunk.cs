@@ -40,4 +40,24 @@ public class Trunk : MonoBehaviour, IGrowable
     {
         return _heighestTrunkPart.GetFilledTopLocalPoint();
     }
+
+    public Vector2 GetFilledTopGlobalPoint()
+    {
+        return _heighestTrunkPart.GetFilledTopGlobalPoint();
+    }
+
+    public float GetMaxHeight()
+    {
+        return _heighestTrunkPart.GetMaxHeight();
+    }
+
+    public IGrowable GetRelativeGrowable()
+    {
+        return _heighestTrunkPart.GetRelativeGrowable();
+    }
+
+    public Transform GetGrowableTransform()
+    {
+        return _heighestTrunkPart.GetGrowableTransform();
+    }
 }

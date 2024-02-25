@@ -20,7 +20,7 @@ public class CustomCamera : MonoBehaviour, IService
 
     private void Update()
     {
-        _moveController.Move(new Vector2(0, _tree.GetTopTreePoint().y + heightOffset));
+        _moveController.Move(new Vector2(0, _tree.GetFilledTopGlobalPoint().y + heightOffset));
     }
 
     public void ActivateMovement()

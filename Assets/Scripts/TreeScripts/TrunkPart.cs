@@ -26,4 +26,25 @@ public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
         var fillingHeight = Height * fillingValue;
         return new Vector2(0, (-(Height / 2) + fillingHeight)) / Height;
     }
+
+    public Vector2 GetFilledTopGlobalPoint()
+    {
+        var localPoint = GetFilledTopLocalPoint();
+        return transform.TransformPoint(new Vector2(localPoint.x / transform.localScale.x, localPoint.y / Height));
+    }
+
+    public float GetMaxHeight()
+    {
+        return Height;
+    }
+
+    public IGrowable GetRelativeGrowable()
+    {
+        return this;
+    }
+
+    public Transform GetGrowableTransform()
+    {
+        return transform;
+    }
 }

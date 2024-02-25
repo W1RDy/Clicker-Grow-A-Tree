@@ -32,7 +32,6 @@ public class FactoryController
 
             spawnedObjs[i] = _factory.Create(position, rotation, _container.transform) as Branch;
         }
-        Debug.Log(_busyPositions.Count);
         return spawnedObjs;
     }
 
@@ -61,7 +60,6 @@ public class FactoryController
 
         var maxSpawnBranchSettings = spawnSettingsConfig.MaxBranchSetting;
         var minSpawnBranchSettings = spawnSettingsConfig.MinBranchSetting;
-        Debug.LogWarning(relativeObj.name);
         while (true)
         {
             tryCount++;

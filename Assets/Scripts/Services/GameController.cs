@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour, IService
 
     private void Update()
     {
-        if (!_camera.IsMoving() && _tree.GetTopTreePoint().y > 0)
+        if (!_camera.IsMoving() && _tree.GetFilledTopGlobalPoint().y > 0)
             _camera.ActivateMovement();
     }
 

@@ -15,7 +15,9 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private ObjectsDestoyer _objectsDestoyer;
     [SerializeField] private WindowService _windowService;
     [SerializeField] private ButtonService _buttonService;
+    [SerializeField] private CoinsIndicator _coinsIndicator;
     private SettingsChanger _settingsChanger;
+    private GrowablesService _growablesService;
 
     private void Awake()
     {
@@ -43,6 +45,8 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindScoreCounter();
         BindWindowService();
         BindWindowActivator();
+        BindCoinsCounter();
+        BindGrowablesService();
         BindGrowController();
         BindSettingsChanger();
         BindButtonService();
@@ -121,5 +125,17 @@ public class ServiceLocatorLoader : MonoBehaviour
     {
         var windowActivator = new WindowActivator(_windowService);
         ServiceLocator.Instance.Register(windowActivator);
+    }
+
+    private void BindGrowablesService()
+    {
+        var growableService = new GrowablesService();
+        ServiceLocator.Instance.Register(growableService);
+    }
+
+    private void BindCoinsCounter()
+    {
+        var coinsCounter = new CoinsCounter(_coinsIndicator);
+        ServiceLocator.Instance.Register(coinsCounter);
     }
 }
