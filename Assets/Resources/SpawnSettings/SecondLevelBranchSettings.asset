@@ -20,6 +20,6 @@ MonoBehaviour:
     _spawnPos: {x: 0.06, y: 1.11}
     _spawnRot: 48
     _isSpawnToRight: 1
-  _distanceBetweenBranch: 0.7
+  _distanceBetweenBranch: 0.4
   _branchCount: 2
   _maxBranchCount: 4

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,9 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private CustomCamera _customCamera;
     [SerializeField] private GameController _gameController;
     [SerializeField] private ObjectsDestoyer _objectsDestoyer;
+    [SerializeField] private WindowService _windowService;
+    [SerializeField] private ButtonService _buttonService;
+    private SettingsChanger _settingsChanger;
 
     private void Awake()
     {
@@ -37,7 +41,11 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindGameController();
         BindScoreIndicator();
         BindScoreCounter();
+        BindWindowService();
+        BindWindowActivator();
         BindGrowController();
+        BindSettingsChanger();
+        BindButtonService();
         BindTouchHandler();
     }
 
@@ -91,5 +99,27 @@ public class ServiceLocatorLoader : MonoBehaviour
     private void BindObjectDestroyer()
     {
         ServiceLocator.Instance.Register(_objectsDestoyer);
+    }
+
+    private void BindSettingsChanger()
+    {
+        _settingsChanger = new SettingsChanger(_growSettings);
+        ServiceLocator.Instance.Register(_settingsChanger);
+    }
+
+    private void BindButtonService()
+    {
+        ServiceLocator.Instance.Register(_buttonService);
+    }
+
+    private void BindWindowService()
+    {
+        ServiceLocator.Instance.Register(_windowService);
+    }
+
+    private void BindWindowActivator()
+    {
+        var windowActivator = new WindowActivator(_windowService);
+        ServiceLocator.Instance.Register(windowActivator);
     }
 }
