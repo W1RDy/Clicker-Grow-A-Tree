@@ -7,6 +7,7 @@ public class CoinsFactoryController : MonoBehaviour
     [SerializeField] private SpawnChances[] _spawnChances;
     private GrowablesService _growablesService;
     private CoinsFactory _coinsFactory;
+    private BusyPosService _busyPosService;
 
     private void Start()
     {
@@ -14,20 +15,34 @@ public class CoinsFactoryController : MonoBehaviour
         var container = new GameObject("Coins").transform;
         _coinsFactory = new CoinsFactory(container);
         _coinsFactory.LoadResources();
+        _busyPosService = new BusyPosService();
         SpawnCoin();
     }
 
     public void SpawnCoin()
     {
-        var growable = GetRandomGrowable();
-        var randomOffset = Random.Range(0, growable.GetMaxHeight());
+        IGrowable growable;
+        Vector2 position;
+        while (true)
+        {
+            growable = GetRandomGrowable();
+            position = GetRandomPosition(growable);
 
-        var position = new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset / growable.GetRelativeGrowable().GetMaxHeight());
-        position = growable.GetGrowableTransform().TransformPoint(position);
+            if (!_busyPosService.CheckPosition(position, growable.GetGrowableTransform(), 2f)) continue;
 
+            _busyPosService.AddBusyPos(growable.GetGrowableTransform(), position);
+            position = growable.GetGrowableTransform().TransformPoint(position);
+            break;
+        }
         var coin = _coinsFactory.Create(position, Quaternion.identity, null) as Coin;
         coin.ConnectGrowable(growable);
-    }    
+    }
+
+    public Vector2 GetRandomPosition(IGrowable growable)
+    {
+        var randomOffset = Random.Range(0, growable.GetMaxHeight());
+        return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset / growable.GetRelativeGrowable().GetMaxHeight());
+    }
 
     public IGrowable GetRandomGrowable()
     {
@@ -41,7 +56,7 @@ public class CoinsFactoryController : MonoBehaviour
         else return _growablesService.GetTree();
     }
 
-    public int GetRandomGrowableLevel()
+    private int GetRandomGrowableLevel()
     {
         int random = Random.Range(1, 101);
         var growableLevel = 0;

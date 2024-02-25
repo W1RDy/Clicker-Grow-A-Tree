@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,5 +22,24 @@ public class BranchSpawnSettingsConfig : ScriptableObject
         {
             if (value > _branchCount && value <= _maxBranchCount) _branchCount = value;
         } 
+    }
+}
+
+[Serializable]
+public class SpawnBranchSettings
+{
+    [SerializeField] private Vector2 _spawnPos;
+    [SerializeField] private float _spawnRot;
+    [SerializeField] private bool _isSpawnToRight;
+
+    public Vector2 SpawnPos => _spawnPos;
+    public float SpawnRot => _spawnRot;
+    public bool IsSpawnToRight => _isSpawnToRight;
+
+    public SpawnBranchSettings(Vector2 spawnPos, float spawnRot, bool isSpawnToRight)
+    {
+        _spawnPos = spawnPos;
+        _spawnRot = spawnRot;
+        _isSpawnToRight = isSpawnToRight;
     }
 }

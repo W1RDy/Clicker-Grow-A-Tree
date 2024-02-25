@@ -23,7 +23,7 @@ public class Coin : MonoBehaviour
             _growable = growable.GetRelativeGrowable();
             _positionInGrowableCoord = _growable.GetGrowableTransform().InverseTransformPoint(transform.position);
         }
-        Debug.Log(_growable.GetGrowableTransform());
+        //Debug.Log(_growable.GetGrowableTransform());
     }
 
     public void Update()
@@ -38,7 +38,7 @@ public class Coin : MonoBehaviour
     public bool CheckGrowable()
     {
         var growableFilledPos = _growable.GetFilledTopLocalPoint();
-        Debug.Log(Vector2.Distance(growableFilledPos, _positionInGrowableCoord));
+        //Debug.Log(Vector2.Distance(growableFilledPos, _positionInGrowableCoord));
         return Mathf.Abs(growableFilledPos.y - _positionInGrowableCoord.y) < 0.1f;
     }
 }

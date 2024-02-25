@@ -42,6 +42,7 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
 
     public IGrowable GetRelativeGrowable()
     {
+        if (_relativeObj == null) return null;
         return _relativeObj.GetComponent<IGrowable>();
     }
 
@@ -51,9 +52,10 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
         return _relativeObj.TransformPoint(new Vector2(localPoint.x / _relativeObj.localScale.x, localPoint.y / _relativeObj.localScale.y));
     }
 
-    public void OnDestroy()
+    public override void OnDestroy()
     {
         Destory?.Invoke(_branchLevel, this);
+        base.OnDestroy();
     }
 
     public float GetMaxHeight()

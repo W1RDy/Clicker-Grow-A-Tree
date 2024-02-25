@@ -12,7 +12,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
     private float _height = 0;
     private BranchSpawnSettingsConfig[] _spawnSettings;
 
-    private FactoryController[] _branchFactoryControllers;
+    private BranchesFactoryController[] _branchFactoryControllers;
     private GrowSettings _growSettings;
 
     private Action<Transform> _trunkPartCallback;
@@ -50,12 +50,12 @@ public class Tree : MonoBehaviour, IService, IGrowable
         var branchContainer = new GameObject(name + "Branches");
         branchContainer.transform.SetParent(transform);
 
-        _branchFactoryControllers = new FactoryController[_spawnSettings.Length];
+        _branchFactoryControllers = new BranchesFactoryController[_spawnSettings.Length];
         for (int i = 0; i < _branchFactoryControllers.Length; i++)
         {
             var factory = new BranchFactory(i + 1);
             factory.LoadResources();
-            _branchFactoryControllers[i] = new FactoryController(factory, branchContainer);
+            _branchFactoryControllers[i] = new BranchesFactoryController(factory, branchContainer, _spawnSettings[i]);
         }
     }
 
@@ -69,7 +69,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
     {
         if (branchLevel > _growSettings.BranchingValue) return;
 
-        var newBranches = _branchFactoryControllers[branchLevel - 1].SpawnByFactoryWithRandomSettings(_spawnSettings[branchLevel - 1], relativeObj) as Branch[];
+        var newBranches = _branchFactoryControllers[branchLevel - 1].SpawnByFactoryWithRandomSettings(relativeObj) as Branch[];
         var nextBranchLevel = branchLevel + 1;
         foreach (var branch in newBranches)
         {
