@@ -8,21 +8,31 @@ public class Tree : MonoBehaviour, IService, IGrowable
     [SerializeField] BranchSpawnSettingsConfig[] _spawnSettingsConfig;
     [SerializeField] private Trunk _trunk;
     [SerializeField] private TrunkPart _trunkPartPrefab;
-    [SerializeField, Min(1)] private int _branchingValue = 1;
 
     private float _height = 0;
-    private List<Branch> _branches = new List<Branch>();
     private BranchSpawnSettingsConfig[] _spawnSettings;
 
     private FactoryController[] _branchFactoryControllers;
-    private Action<Transform> _trunkPartCallback;
+    private GrowSettings _growSettings;
 
-    private void Awake()
+    private Action<Transform> _trunkPartCallback;
+    public event Action<Branch[]> SpawnNewBranches;
+
+    public void InitializeTree(GrowSettings growSettings)
     {
+        _growSettings = growSettings;
         InitializeSpawnSettings();
         InitializeBranchFactoryControllers();
 
-        _trunkPartCallback = relativeObj => SpawnBranches(relativeObj, 1);
+        _trunkPartCallback = relativeObj =>
+        {
+            foreach (var spawnSetting in _spawnSettings)
+            {
+                spawnSetting.BranchCount = _growSettings.BranchesCount;
+            }
+
+            SpawnBranches(relativeObj, 1);
+        };
         _trunk.InitializeTrunk(_trunkPartPrefab, _trunkPartCallback);
     }
 
@@ -53,31 +63,20 @@ public class Tree : MonoBehaviour, IService, IGrowable
     {
         _height += _trunkPartPrefab.transform.localScale.y * growValue;
         _trunk.Grow(_height);
-        GrowBranches(growValue);
     }
 
     private void SpawnBranches(Transform relativeObj, int branchLevel)
     {
-        if (branchLevel > _branchingValue) return;
+        if (branchLevel > _growSettings.BranchingValue) return;
 
         var newBranches = _branchFactoryControllers[branchLevel - 1].SpawnByFactoryWithRandomSettings(_spawnSettings[branchLevel - 1], relativeObj) as Branch[];
         var nextBranchLevel = branchLevel + 1;
         foreach (var branch in newBranches)
         {
             branch.InitializeBranch(relativeObj);
-            _branches.Add(branch);
             SpawnBranches(branch.transform, nextBranchLevel);
         }
-    }
-
-    private void GrowBranches(float growValue)
-    {
-        var branches = new List<Branch>(_branches);
-        foreach (Branch branch in branches)
-        {
-            if (branch == null) _branches.Remove(branch);
-            else branch.Grow(growValue * branch.Height);
-        }
+        SpawnNewBranches?.Invoke(newBranches);
     }
 
     public float GetHeight()

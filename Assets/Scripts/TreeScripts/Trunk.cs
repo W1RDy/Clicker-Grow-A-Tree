@@ -17,7 +17,11 @@ public class Trunk : MonoBehaviour, IGrowable
 
     public void Grow(float sumHeight)
     {
-        if (sumHeight >= _maxHeight) AddNewTrunkPart();
+        if (sumHeight >= _maxHeight)
+        {
+            _heighestTrunkPart.Grow(1);
+            AddNewTrunkPart();
+        }
         _heighestTrunkPart.Grow((sumHeight / _heighestTrunkPart.Height) % 1);
     }
 

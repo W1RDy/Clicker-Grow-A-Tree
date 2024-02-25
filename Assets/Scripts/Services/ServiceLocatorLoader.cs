@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ServiceLocatorLoader : MonoBehaviour
 {
+    [SerializeField] private GrowSettings _growSettings;
     [SerializeField] private TouchZone _touchZone;
     [SerializeField] private ScoreIndicator _scoreIndicator;
     [SerializeField] private Tree _tree;
@@ -71,7 +72,7 @@ public class ServiceLocatorLoader : MonoBehaviour
 
     private void BindGrowController()
     {
-        var controller = new GrowController();
+        var controller = new GrowController(_growSettings);
         ServiceLocator.Instance.Register(controller);
     }
 

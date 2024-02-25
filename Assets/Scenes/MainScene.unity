@@ -462,7 +462,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 62685a1eb571ccd4a8716d2f49699891, type: 2}
   _trunk: {fileID: 1814079766}
   _trunkPartPrefab: {fileID: 5850813300958775615, guid: ed44abb862b6a4447965acd8e8ee89f1, type: 3}
-  _branchingValue: 2
 --- !u!1 &885377294
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,6 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e34ddd19f9d3be4488ee8f5037fb048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _growSettings: {fileID: 11400000, guid: 4bfe20fd397aee748a55932e0591b790, type: 2}
   _touchZone: {fileID: 1588189597}
   _scoreIndicator: {fileID: 256213484}
   _tree: {fileID: 750922387}
