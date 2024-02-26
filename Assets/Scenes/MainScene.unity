@@ -1441,9 +1441,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5df0ad1e1f179f45978cbe7ff49de99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnSettingsConfig:
-  - {fileID: 11400000, guid: 06c8f4a1ad0626d49bb1e197977436e7, type: 2}
-  - {fileID: 11400000, guid: 62685a1eb571ccd4a8716d2f49699891, type: 2}
   _trunk: {fileID: 1814079766}
   _trunkPartPrefab: {fileID: 5850813300958775615, guid: ed44abb862b6a4447965acd8e8ee89f1, type: 3}
 --- !u!1 &755835728
@@ -1612,6 +1609,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _growSettings: {fileID: 11400000, guid: 4bfe20fd397aee748a55932e0591b790, type: 2}
+  _coinsSpawnSettings: {fileID: 11400000, guid: ac26e8e91c574e74ab7a7492051f9726, type: 2}
+  _branchSpawnSettingsConfigs:
+  - {fileID: 11400000, guid: 06c8f4a1ad0626d49bb1e197977436e7, type: 2}
+  - {fileID: 11400000, guid: 62685a1eb571ccd4a8716d2f49699891, type: 2}
   _touchZone: {fileID: 1588189597}
   _scoreIndicator: {fileID: 256213484}
   _tree: {fileID: 750922387}
@@ -2837,53 +2838,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa7c76e9063fe24b8e010cde9c01f5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &2058652311
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2058652313}
-  - component: {fileID: 2058652312}
-  m_Layer: 0
-  m_Name: CoinsFactoryController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2058652312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2058652311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef7ee593e6bf0f742a212d8243609060, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spawnChances:
-  - level: 0
-    spawnChance: 0
-  - level: 1
-    spawnChance: 50
-  - level: 2
-    spawnChance: 50
---- !u!4 &2058652313
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2058652311}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.03741, y: 28.544657, z: -3.7544513}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

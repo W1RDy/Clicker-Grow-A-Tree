@@ -2,33 +2,46 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class CoinsFactoryController : MonoBehaviour
+public class CoinsFactoryController
 {
-    [SerializeField] private SpawnChances[] _spawnChances;
+    private CoinsSpawnSettings _coinsSpawnSettings;
     private GrowablesService _growablesService;
     private CoinsFactory _coinsFactory;
     private BusyPosService _busyPosService;
 
-    private void Start()
+    public CoinsFactoryController(CoinsSpawnSettings coinsSpawnSettings)
     {
+        _coinsSpawnSettings = coinsSpawnSettings;
         _growablesService = ServiceLocator.Instance.Get<GrowablesService>();
         var container = new GameObject("Coins").transform;
         _coinsFactory = new CoinsFactory(container);
         _coinsFactory.LoadResources();
         _busyPosService = new BusyPosService();
-        SpawnCoin();
     }
 
-    public void SpawnCoin()
+    public void SpawnCoins(int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            SpawnCoin();
+        }
+    }
+
+    private void SpawnCoin()
     {
         IGrowable growable;
         Vector2 position;
         while (true)
         {
             growable = GetRandomGrowable();
+            Debug.Log(growable.GetGrowableTransform().name);
             position = GetRandomPosition(growable);
-
-            if (!_busyPosService.CheckPosition(position, growable.GetGrowableTransform(), 2f)) continue;
+            Debug.Log(position);
+            if (!_busyPosService.CheckPosition(position, growable.GetGrowableTransform(), 2f))
+            {
+                Debug.Log("All Busy");
+                continue;
+            }
 
             _busyPosService.AddBusyPos(growable.GetGrowableTransform(), position);
             position = growable.GetGrowableTransform().TransformPoint(position);
@@ -40,8 +53,12 @@ public class CoinsFactoryController : MonoBehaviour
 
     public Vector2 GetRandomPosition(IGrowable growable)
     {
-        var randomOffset = Random.Range(0, growable.GetMaxHeight());
-        return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset / growable.GetRelativeGrowable().GetMaxHeight());
+        bool growableIsTree = growable.GetGrowableTransform() == growable.GetRelativeGrowable().GetGrowableTransform();
+        var minOffset = growableIsTree ? 0.5f : 0;
+        var randomOffset = Random.Range(minOffset, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y);
+        var growableSizeLocalTransform = growableIsTree ? growable.GetMaxHeight() : 1;
+        Debug.Log(growable.GetFilledTopLocalPoint().y);
+        return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset / growableSizeLocalTransform);
     }
 
     public IGrowable GetRandomGrowable()
@@ -61,7 +78,7 @@ public class CoinsFactoryController : MonoBehaviour
         int random = Random.Range(1, 101);
         var growableLevel = 0;
         int sum = 0;
-        foreach (var chance in _spawnChances)
+        foreach (var chance in _coinsSpawnSettings.SpawnChances)
         {
             sum += chance.spawnChance;
             if (sum >= random)

@@ -4,30 +4,32 @@ using UnityEngine;
 
 public class SettingsChanger : IService
 {
-    private GrowSettings _settings;
+    private GrowSettings _gorwSettings;
+    private CoinsSpawnSettings _coinsSpawnSettings;
 
-    public SettingsChanger(GrowSettings settings)
+    public SettingsChanger(GrowSettings settings, CoinsSpawnSettings coinsSpawnSettings)
     {
-        _settings = settings;
+        _gorwSettings = settings;
+        _coinsSpawnSettings = coinsSpawnSettings;
     }
 
     public void ChangeGrowTrunkSpeed(float value)
     {
-        _settings.TrunkGrowSpeed += value;
+        _gorwSettings.TrunkGrowSpeed += value;
     }
 
     public void ChangeGrowBranchSpeed(float value)
     {
-        _settings.BranchesGrowSpeed += value;
+        _gorwSettings.BranchesGrowSpeed += value;
     }
 
     public void ChangeBranchCount(int value)
     {
-        _settings.BranchesCount += value;
+        _gorwSettings.BranchesCount += value;
     }
 
     public void ChangeBranchingValue(int value)
     {
-        _settings.BranchingValue += value;
+        _gorwSettings.BranchingValue += value;
     }
 }

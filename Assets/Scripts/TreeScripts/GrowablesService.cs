@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GrowablesService : IService
 {
+    private FactoriesController _factoriesController;
     private Tree _tree;
     private Action<int, Branch[]> AddNewBranches;
     private Action<int, Branch> RemoveOddBranches;
@@ -38,8 +39,12 @@ public class GrowablesService : IService
                 branchesList.Add(branch);
             }
         };
+    }
 
-        _tree.SpawnNewBranches += AddNewBranches;
+    public void InitializeService(FactoriesController factoriesController)
+    {
+        _factoriesController = factoriesController;
+        _factoriesController.SpawnNewBranches += AddNewBranches;
     }
 
     public Tree GetTree()
@@ -65,7 +70,7 @@ public class GrowablesService : IService
     public void OnFinishGame()
     {
         Debug.Log("Finish");
-        _tree.SpawnNewBranches -= AddNewBranches;
+        _factoriesController.SpawnNewBranches -= AddNewBranches;
         _gameController.FinishGame -= OnFinishGame;
     }
 

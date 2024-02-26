@@ -5,78 +5,26 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour, IService, IGrowable
 {
-    [SerializeField] BranchSpawnSettingsConfig[] _spawnSettingsConfig;
     [SerializeField] private Trunk _trunk;
     [SerializeField] private TrunkPart _trunkPartPrefab;
 
     private float _height = 0;
-    private BranchSpawnSettingsConfig[] _spawnSettings;
+    public GrowSettings GrowSettings {get; private set;}
 
-    private BranchesFactoryController[] _branchFactoryControllers;
-    private GrowSettings _growSettings;
-
-    private Action<Transform> _trunkPartCallback;
-    public event Action<int, Branch[]> SpawnNewBranches;
-
-    public void InitializeTree(GrowSettings growSettings)
+    public void SetGrowSettings(GrowSettings growSettings)
     {
-        _growSettings = growSettings;
-        InitializeSpawnSettings();
-        InitializeBranchFactoryControllers();
-
-        _trunkPartCallback = relativeObj =>
-        {
-            foreach (var spawnSetting in _spawnSettings)
-            {
-                spawnSetting.BranchCount = _growSettings.BranchesCount;
-            }
-
-            SpawnBranches(relativeObj, 1);
-        };
-        _trunk.InitializeTrunk(_trunkPartPrefab, _trunkPartCallback);
+        GrowSettings = growSettings;
     }
 
-    private void InitializeSpawnSettings()
+    public void InitializeTree(Action<Transform> relativeObjCallback)
     {
-        _spawnSettings = new BranchSpawnSettingsConfig[_spawnSettingsConfig.Length];
-        for (int i = 0; i < _spawnSettings.Length; i++)
-        {
-            _spawnSettings[i] = Instantiate(_spawnSettingsConfig[i]);
-        }
-    }
-
-    private void InitializeBranchFactoryControllers()
-    {
-        var branchContainer = new GameObject(name + "Branches");
-        branchContainer.transform.SetParent(transform);
-
-        _branchFactoryControllers = new BranchesFactoryController[_spawnSettings.Length];
-        for (int i = 0; i < _branchFactoryControllers.Length; i++)
-        {
-            var factory = new BranchFactory(i + 1);
-            factory.LoadResources();
-            _branchFactoryControllers[i] = new BranchesFactoryController(factory, branchContainer, _spawnSettings[i]);
-        }
+        _trunk.InitializeTrunk(_trunkPartPrefab, relativeObjCallback);
     }
 
     public void Grow(float growValue)
     {
         _height += _trunkPartPrefab.transform.localScale.y * growValue;
         _trunk.Grow(_height);
-    }
-
-    private void SpawnBranches(Transform relativeObj, int branchLevel)
-    {
-        if (branchLevel > _growSettings.BranchingValue) return;
-
-        var newBranches = _branchFactoryControllers[branchLevel - 1].SpawnByFactoryWithRandomSettings(relativeObj) as Branch[];
-        var nextBranchLevel = branchLevel + 1;
-        foreach (var branch in newBranches)
-        {
-            branch.InitializeBranch(relativeObj, branchLevel);
-            SpawnBranches(branch.transform, nextBranchLevel);
-        }
-        SpawnNewBranches?.Invoke(branchLevel, newBranches);
     }
 
     public float GetHeight()

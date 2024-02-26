@@ -7,6 +7,12 @@ using UnityEngine.UI;
 public class ServiceLocatorLoader : MonoBehaviour
 {
     [SerializeField] private GrowSettings _growSettings;
+    [SerializeField] private CoinsSpawnSettings _coinsSpawnSettings;
+    [SerializeField] private BranchSpawnSettingsConfig[] _branchSpawnSettingsConfigs;
+    private GrowSettings _growSettingsInstance;
+    private CoinsSpawnSettings _coinsSpawnSettingsInstance;
+
+
     [SerializeField] private TouchZone _touchZone;
     [SerializeField] private ScoreIndicator _scoreIndicator;
     [SerializeField] private Tree _tree;
@@ -17,10 +23,12 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private ButtonService _buttonService;
     [SerializeField] private CoinsIndicator _coinsIndicator;
     private SettingsChanger _settingsChanger;
-    private GrowablesService _growablesService;
+    private GrowablesService _growableService;
 
     private void Awake()
     {
+        _growSettingsInstance = Instantiate(_growSettings);
+        _coinsSpawnSettingsInstance = Instantiate(_coinsSpawnSettings);
         Bind();
     }
 
@@ -48,6 +56,7 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindCoinsCounter();
         BindGrowablesService();
         BindGrowController();
+        BindFactoryController();
         BindSettingsChanger();
         BindButtonService();
         BindTouchHandler();
@@ -84,7 +93,7 @@ public class ServiceLocatorLoader : MonoBehaviour
 
     private void BindGrowController()
     {
-        var controller = new GrowController(_growSettings);
+        var controller = new GrowController(_growSettingsInstance);
         ServiceLocator.Instance.Register(controller);
     }
 
@@ -107,7 +116,7 @@ public class ServiceLocatorLoader : MonoBehaviour
 
     private void BindSettingsChanger()
     {
-        _settingsChanger = new SettingsChanger(_growSettings);
+        _settingsChanger = new SettingsChanger(_growSettingsInstance, _coinsSpawnSettingsInstance);
         ServiceLocator.Instance.Register(_settingsChanger);
     }
 
@@ -129,13 +138,21 @@ public class ServiceLocatorLoader : MonoBehaviour
 
     private void BindGrowablesService()
     {
-        var growableService = new GrowablesService();
-        ServiceLocator.Instance.Register(growableService);
+        _growableService = new GrowablesService();
+        ServiceLocator.Instance.Register(_growableService);
     }
 
     private void BindCoinsCounter()
     {
         var coinsCounter = new CoinsCounter(_coinsIndicator);
         ServiceLocator.Instance.Register(coinsCounter);
+    }
+
+    private void BindFactoryController()
+    {
+        var factoriesController = new FactoriesController();
+        _growableService.InitializeService(factoriesController);
+        factoriesController.InitializeController(_branchSpawnSettingsConfigs, _coinsSpawnSettingsInstance);
+        ServiceLocator.Instance.Register(factoriesController);
     }
 }

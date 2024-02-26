@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class BranchesFactoryController
+public class BranchesFactoryController 
 {
     private IFactory _factory;
     private GameObject _container;

@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d506945b13e4084bbf6ffe59af4320d, type: 3}
-  m_Name: GrowSettings
+  m_Script: {fileID: 11500000, guid: b0084452bcf49f947a23736d9b69cf70, type: 3}
+  m_Name: CoinsSpawnSettings
   m_EditorClassIdentifier: 
-  _trunkGrowSpeed: 0.1
-  _branchesGrowSpeed: 0.1
-  _branchesCount: 4
-  _branchingValue: 2
+  _spawnChances:
+  - level: 0
+    spawnChance: 100
+  - level: 1
+    spawnChance: 0
+  - level: 2
+    spawnChance: 0
