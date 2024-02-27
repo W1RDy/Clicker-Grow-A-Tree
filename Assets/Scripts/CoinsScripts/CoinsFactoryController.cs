@@ -19,21 +19,21 @@ public class CoinsFactoryController
         _busyPosService = new BusyPosService();
     }
 
-    public void SpawnCoins(int count)
+    public void SpawnCoins(int count, Transform relativeObj)
     {
         for (var i = 0; i < count; i++)
         {
-            SpawnCoin();
+            SpawnCoin(relativeObj);
         }
     }
 
-    private void SpawnCoin()
+    private void SpawnCoin(Transform relativeObj)
     {
         IGrowable growable;
         Vector2 position;
         while (true)
         {
-            growable = GetRandomGrowable();
+            growable = GetRandomGrowable(relativeObj);
             Debug.Log(growable.GetGrowableTransform().name);
             position = GetRandomPosition(growable);
             Debug.Log(position);
@@ -55,18 +55,18 @@ public class CoinsFactoryController
     {
         bool growableIsTree = growable.GetGrowableTransform() == growable.GetRelativeGrowable().GetGrowableTransform();
         var minOffset = growableIsTree ? 0.5f : 0;
-        var randomOffset = Random.Range(minOffset, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y);
+        var randomOffset = Random.Range(minOffset, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
         var growableSizeLocalTransform = growableIsTree ? growable.GetMaxHeight() : 1;
         Debug.Log(growable.GetFilledTopLocalPoint().y);
         return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset / growableSizeLocalTransform);
     }
 
-    public IGrowable GetRandomGrowable()
+    public IGrowable GetRandomGrowable(Transform relativeObj)
     {
         var growbaleLevel = GetRandomGrowableLevel();
         if (growbaleLevel > 0)
         {
-            var branches = _growablesService.GetBranches(growbaleLevel);
+            var branches = _growablesService.GetBranches(growbaleLevel, relativeObj);
             var randomGrowable = branches[Random.Range(0, branches.Count)];
             return randomGrowable;
         }

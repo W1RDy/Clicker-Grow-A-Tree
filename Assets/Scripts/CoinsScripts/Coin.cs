@@ -38,7 +38,6 @@ public class Coin : MonoBehaviour
     public bool CheckGrowable()
     {
         var growableFilledPos = _growable.GetFilledTopLocalPoint();
-        //Debug.Log(Vector2.Distance(growableFilledPos, _positionInGrowableCoord));
-        return Mathf.Abs(growableFilledPos.y - _positionInGrowableCoord.y) < 0.1f;
+        return growableFilledPos.y >= _positionInGrowableCoord.y;
     }
 }

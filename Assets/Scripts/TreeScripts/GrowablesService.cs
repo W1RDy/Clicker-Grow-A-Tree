@@ -67,6 +67,27 @@ public class GrowablesService : IService
         return _branches[level];
     }
 
+    public List<Branch> GetBranches(int level, Transform relativeObj)
+    {
+        var branches = GetBranches(level);
+        List<Branch> result = new List<Branch>();
+        foreach(var branch in branches)
+        {
+            IGrowable growable = branch;
+            for (int i = 0; i < level; i++)
+            {
+                growable = growable.GetRelativeGrowable();
+                if (growable == null) break;
+                if (relativeObj == growable.GetGrowableTransform())
+                {
+                    result.Add(branch);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
     public void OnFinishGame()
     {
         Debug.Log("Finish");

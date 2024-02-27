@@ -5,19 +5,28 @@ public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
 {
     private const string AppearValue = "_Fill";
     private Material _material;
+    private float _currentGrowValue;
     public float Height { get; private set; }
+    private Action<float> LerpChangerCallback;
 
     public void InitializeTrunk(Action<Transform> _callback)
     {
         Height = transform.localScale.y;
         _material = GetComponent<SpriteRenderer>().material;
         _callback?.Invoke(transform);
+
+        LerpChangerCallback = value =>
+        {
+            _currentGrowValue = value;
+            _material.SetFloat(AppearValue, _currentGrowValue);
+        };
     }
 
     public void Grow(float fillingValue)
     {
         if (fillingValue > 1) fillingValue = 1;
-        _material.SetFloat(AppearValue, fillingValue);
+        _currentGrowValue = fillingValue;
+        StartCoroutine(FloatLerpChanger.LerpFloatChangeCoroutine(_material.GetFloat(AppearValue), _currentGrowValue, 0.2f, LerpChangerCallback));
     }
 
     public Vector2 GetFilledTopLocalPoint()

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
 {
@@ -13,6 +14,7 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
     private IGrowable _growableParent;
     public float Height { get; private set; }
     public event Action<int, Branch> Destory;
+    private Action<float> LerpChangerCallback;
 
     public void InitializeBranch(Transform relativeObj, int branchLevel)
     {
@@ -21,6 +23,12 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
         _growableParent = _relativeObj.GetComponent<IGrowable>();
         _material = GetComponentInChildren<SpriteRenderer>().material;
         Height = transform.GetChild(0).localScale.y;
+
+        LerpChangerCallback = value =>
+        {
+            _currentGrowValue = value;
+            _material.SetFloat(AppearValue, _currentGrowValue);
+        };
     }
 
     public void Grow(float growValue)
@@ -29,7 +37,7 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
         {
             _currentGrowValue += growValue;
             if (_currentGrowValue > 1) _currentGrowValue = 1;
-            _material.SetFloat(AppearValue, _currentGrowValue);
+            StartCoroutine(FloatLerpChanger.LerpFloatChangeCoroutine(_material.GetFloat(AppearValue), _currentGrowValue, 0.2f, LerpChangerCallback));
         }
     }
 

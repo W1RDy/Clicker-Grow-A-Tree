@@ -27,7 +27,7 @@ public class FactoriesController : IService
             }
 
             SpawnBranches(relativeObj, 1);
-            SpawnCoins();
+            SpawnCoins(relativeObj);
         };
         _tree.InitializeTree(_trunkSpawnCallback);
     }
@@ -69,8 +69,8 @@ public class FactoriesController : IService
         SpawnNewBranches?.Invoke(branchLevel, newBranches);
     }
 
-    private void SpawnCoins()
+    private void SpawnCoins(Transform relativeObj)
     {
-        _coinsFactoryController.SpawnCoins(5);
+        _coinsFactoryController.SpawnCoins(5, relativeObj);
     }
 }

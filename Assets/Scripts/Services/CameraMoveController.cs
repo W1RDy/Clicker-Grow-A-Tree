@@ -7,19 +7,32 @@ public class CameraMoveController : IMovable
     private float _speed;
     private Transform _camera;
     private bool _isCanMoving;
+    private float _speedMultiplyer = 1f;
 
     public CameraMoveController(float speed, Transform transform)
     {
-        _speed = speed;
+        SetSpeed(speed);
         _camera = transform;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        _speed = speed;
     }
 
     public void Move(Vector2 endPos)
     {
         if (_isCanMoving)
         {
-            _camera.position = Vector3.MoveTowards(_camera.position, new Vector3(endPos.x, endPos.y, _camera.position.z), _speed * Time.deltaTime);
+            ChangeSpeedByDistance(endPos);
+            _camera.position = Vector3.MoveTowards(_camera.position, new Vector3(endPos.x, endPos.y, _camera.position.z), _speed * _speedMultiplyer * Time.deltaTime);
         }
+    }
+
+    private void ChangeSpeedByDistance(Vector2 endPos)
+    {
+        _speedMultiplyer = Vector2.Distance(_camera.position, endPos) / _camera.localScale.y;
+        _speedMultiplyer = Mathf.Clamp(_speedMultiplyer, 1f, 20f);
     }
 
     public void ActivateMovement()
