@@ -9,10 +9,12 @@ public class Coin : MonoBehaviour
     private IGrowable _growable;
     private CoinsCounter _coinsCounter;
     private Vector2 _positionInGrowableCoord;
+    private AudioPlayer _audioPlayer;
 
     private void Awake()
     {
         _coinsCounter = ServiceLocator.Instance.Get<CoinsCounter>();
+        _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
     }
 
     public void ConnectGrowable(IGrowable growable)
@@ -31,9 +33,15 @@ public class Coin : MonoBehaviour
     {
         if (CheckGrowable())
         {
-            _coinsCounter.AddCoins(_cost);
-            Destroy(gameObject);
+            CollectCoin();
         }
+    }
+
+    private void CollectCoin()
+    {
+        _coinsCounter.AddCoins(_cost);
+        _audioPlayer.PlaySounds("CollectLeaf");
+        Destroy(gameObject);
     }
 
     public bool CheckGrowable()

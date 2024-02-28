@@ -11,7 +11,7 @@ public class UpgradeButton : MonoBehaviour
     private ButtonService _buttonService;
     private Text _buttonText;
 
-    private void Awake()
+    private void Start()
     {
         _buttonService = ServiceLocator.Instance.Get<ButtonService>();
         _buttonText = GetComponentInChildren<Text>();

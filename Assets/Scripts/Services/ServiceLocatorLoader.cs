@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -9,9 +10,9 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private GrowSettings _growSettings;
     [SerializeField] private CoinsSpawnSettings _coinsSpawnSettings;
     [SerializeField] private BranchSpawnSettingsConfig[] _branchSpawnSettingsConfigs;
+    [SerializeField] private AudioData _audioData;
     private GrowSettings _growSettingsInstance;
     private CoinsSpawnSettings _coinsSpawnSettingsInstance;
-
 
     [SerializeField] private TouchZone _touchZone;
     [SerializeField] private ScoreIndicator _scoreIndicator;
@@ -22,8 +23,11 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private WindowService _windowService;
     [SerializeField] private ButtonService _buttonService;
     [SerializeField] private CoinsIndicator _coinsIndicator;
+    [SerializeField] private AudioPlayer _audioPlayerPrefab;
     private SettingsChanger _settingsChanger;
     private GrowablesService _growableService;
+
+    [SerializeField] AnimationsInitializer _animationsInitializer;
 
     private void Awake()
     {
@@ -48,18 +52,47 @@ public class ServiceLocatorLoader : MonoBehaviour
 
     private void BindServices()
     {
+        BindAudioService();
+        BindAudioPlayer();
+
+        BindAnimationActivator();
+
         BindGameController();
         BindScoreIndicator();
         BindScoreCounter();
+
         BindWindowService();
         BindWindowActivator();
+
         BindCoinsCounter();
+
         BindGrowablesService();
         BindGrowController();
+
         BindFactoryController();
+
         BindSettingsChanger();
         BindButtonService();
         BindTouchHandler();
+    }
+
+    private void BindAnimationActivator()
+    {
+        var animations = _animationsInitializer.InitializeAnimations();
+        var animationActivator = new AnimationActivator(animations);
+        ServiceLocator.Instance.Register(animationActivator);
+    }
+
+    private void BindAudioPlayer()
+    {
+        var audioPlayer = Instantiate(_audioPlayerPrefab);
+        ServiceLocator.Instance.Register(audioPlayer);
+    }
+
+    private void BindAudioService()
+    {
+        var audioService = new AudioService(_audioData);
+        ServiceLocator.Instance.Register(audioService);
     }
 
     private void BindTouchHandler()

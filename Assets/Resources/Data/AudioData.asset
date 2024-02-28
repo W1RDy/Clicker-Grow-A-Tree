@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e36d7b92415219c4495ba2535c95da42, type: 3}
+  m_Name: AudioData
+  m_EditorClassIdentifier: 
+  _audioConfigs:
+  - _index: Music
+    _clip: {fileID: 8300000, guid: be74d0a2020b768408dbde28df657d8e, type: 3}
+    _volume: 1
+  - _index: CollectLeaf
+    _clip: {fileID: 8300000, guid: e19cee535d70510448c3c1dfc34d39ee, type: 3}
+    _volume: 0.5
+  - _index: Click
+    _clip: {fileID: 8300000, guid: 39a4914c122720749984325bc10c2e64, type: 3}
+    _volume: 1
