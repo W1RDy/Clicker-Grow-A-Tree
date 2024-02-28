@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: FirstLevelBranchSettings
   m_EditorClassIdentifier: 
   _minBranchSetting:
-    _spawnPos: {x: -0.27, y: -2.1}
-    _spawnRot: 60
+    _spawnPos: {x: -0.18, y: 1}
+    _spawnRot: 38
     _isSpawnToRight: 0
   _maxBranchSetting:
-    _spawnPos: {x: 0.27, y: 2.25}
-    _spawnRot: 80
+    _spawnPos: {x: 0.18, y: 4.4}
+    _spawnRot: 87
     _isSpawnToRight: 1
   _distanceBetweenBranch: 1.2
   _branchCount: 2

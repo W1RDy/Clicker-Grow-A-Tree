@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
@@ -37,7 +38,14 @@ public class Coin : MonoBehaviour
 
     public bool CheckGrowable()
     {
-        var growableFilledPos = _growable.GetFilledTopLocalPoint();
-        return growableFilledPos.y >= _positionInGrowableCoord.y;
+        if (_growable as Tree !=  null)
+        {
+            return _growable.GetFilledTopGlobalPoint().y >= transform.position.y;
+        }
+        else
+        {
+            var growableFilledPos = _growable.GetFilledTopLocalPoint();
+            return growableFilledPos.y >= _positionInGrowableCoord.y;
+        }
     }
 }

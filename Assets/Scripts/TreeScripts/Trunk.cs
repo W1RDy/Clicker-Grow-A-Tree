@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Trunk : MonoBehaviour, IGrowable
 {
+    [SerializeField] private Transform spawnPoint;
     private TrunkPart _trunkPartPrefab;
     private float _maxHeight = 0;
     private TrunkPart _heighestTrunkPart;

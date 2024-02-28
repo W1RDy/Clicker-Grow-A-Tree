@@ -11,8 +11,9 @@ public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
 
     public void InitializeTrunk(Action<Transform> _callback)
     {
-        Height = transform.localScale.y;
-        _material = GetComponent<SpriteRenderer>().material;
+        var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        Height = transform.GetChild(0).localScale.y * spriteRenderer.sprite.bounds.size.y;
+        _material = spriteRenderer.material;
         _callback?.Invoke(transform);
 
         LerpChangerCallback = value =>
@@ -33,13 +34,13 @@ public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
     {
         var fillingValue = _material.GetFloat(AppearValue);
         var fillingHeight = Height * fillingValue;
-        return new Vector2(0, (-(Height / 2) + fillingHeight)) / Height;
+        return new Vector2(0, fillingHeight);
     }
 
     public Vector2 GetFilledTopGlobalPoint()
     {
         var localPoint = GetFilledTopLocalPoint();
-        return transform.TransformPoint(new Vector2(localPoint.x / transform.localScale.x, localPoint.y / Height));
+        return transform.TransformPoint(new Vector2(localPoint.x, localPoint.y));
     }
 
     public float GetMaxHeight()

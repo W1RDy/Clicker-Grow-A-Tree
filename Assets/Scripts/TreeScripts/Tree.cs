@@ -23,7 +23,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
 
     public void Grow(float growValue)
     {
-        _height += _trunkPartPrefab.transform.localScale.y * growValue;
+        _height += _trunkPartPrefab.transform.GetChild(0).localScale.y * growValue;
         _trunk.Grow(_height);
     }
 

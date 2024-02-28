@@ -34,9 +34,7 @@ public class CoinsFactoryController
         while (true)
         {
             growable = GetRandomGrowable(relativeObj);
-            Debug.Log(growable.GetGrowableTransform().name);
             position = GetRandomPosition(growable);
-            Debug.Log(position);
             if (!_busyPosService.CheckPosition(position, growable.GetGrowableTransform(), 2f))
             {
                 Debug.Log("All Busy");
@@ -53,12 +51,9 @@ public class CoinsFactoryController
 
     public Vector2 GetRandomPosition(IGrowable growable)
     {
-        bool growableIsTree = growable.GetGrowableTransform() == growable.GetRelativeGrowable().GetGrowableTransform();
-        var minOffset = growableIsTree ? 0.5f : 0;
-        var randomOffset = Random.Range(minOffset, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
-        var growableSizeLocalTransform = growableIsTree ? growable.GetMaxHeight() : 1;
-        Debug.Log(growable.GetFilledTopLocalPoint().y);
-        return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset / growableSizeLocalTransform);
+        //var randomOffset = Random.Range(0, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
+        var randomOffset = growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f;
+        return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset);
     }
 
     public IGrowable GetRandomGrowable(Transform relativeObj)

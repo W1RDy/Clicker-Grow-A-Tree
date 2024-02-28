@@ -18,11 +18,12 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
 
     public void InitializeBranch(Transform relativeObj, int branchLevel)
     {
+        var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _branchLevel = branchLevel;
         _relativeObj = relativeObj;
         _growableParent = _relativeObj.GetComponent<IGrowable>();
-        _material = GetComponentInChildren<SpriteRenderer>().material;
-        Height = transform.GetChild(0).localScale.y;
+        _material = spriteRenderer.material;
+        Height = transform.GetChild(0).localScale.y * spriteRenderer.sprite.bounds.size.y;
 
         LerpChangerCallback = value =>
         {
