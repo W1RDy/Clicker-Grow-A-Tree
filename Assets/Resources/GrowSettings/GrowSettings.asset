@@ -17,4 +17,4 @@ MonoBehaviour:
   _branchesCount: 0
   _branchingValue: 0
   _maxBranchesCount: 6
-  _maxBranchingValue: 3
+  _maxBranchingValue: 2

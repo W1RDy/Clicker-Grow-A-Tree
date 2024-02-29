@@ -1,26 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Button))]
 public class UpgradeButton : MonoBehaviour
 {
-    [SerializeField] private UpgradeType _upgradeType;
-    [SerializeField] private float value;
+    private UpgradeType _upgradeType;
+    private float _value;
+    private int _cost;
     private ButtonService _buttonService;
-    private Text _buttonText;
+    private Text _costText;
+    private Action UpgradedCallback;
+    [SerializeField] private Button _button;
+    public Button Button => _button;
 
     private void Start()
     {
         _buttonService = ServiceLocator.Instance.Get<ButtonService>();
-        _buttonText = GetComponentInChildren<Text>();
-        SetValueInText();
     }
 
-    private void SetValueInText()
+    public void InitializeButton(UpgradeType upgradeType, float upgradeValue, int upgradeCost, Action callback)
     {
-        _buttonText.text += " + " + value;
+        _upgradeType = upgradeType;
+        _costText = GetComponentInChildren<Text>();
+        SetUpgradeParameters(upgradeValue, upgradeCost);
+
+        UpgradedCallback = callback;
+    }
+
+    public void SetUpgradeParameters(float upgradeValue, int upgradeCost)
+    {
+        _value = upgradeValue;
+        _cost = upgradeCost;
+        SetCostText();
+    }
+
+    private void SetCostText()
+    {
+        _costText.text = _cost.ToString();
     }
 
     public void Upgrade()
@@ -28,16 +48,16 @@ public class UpgradeButton : MonoBehaviour
         switch (_upgradeType)
         {
             case UpgradeType.TrunkSpeed:
-                _buttonService.UpgradeTrunkSpeed(value);
+                _buttonService.UpgradeTrunkSpeed(_value, _cost, UpgradedCallback);
                 break;
             case UpgradeType.BranchSpeed:
-                _buttonService.UpgradeBranchSpeed(value);
+                _buttonService.UpgradeBranchSpeed(_value, _cost, UpgradedCallback);
                 break;
             case UpgradeType.BranchingValue:
-                _buttonService.UpgradeBranchingValue((int)Mathf.Floor(value));
+                _buttonService.UpgradeBranchingValue((int)Mathf.Floor(_value), _cost, UpgradedCallback);
                 break;
             case UpgradeType.BranchCount:
-                _buttonService.UpgradeBranchCounts((int)Mathf.Floor(value));
+                _buttonService.UpgradeBranchCounts((int)Mathf.Floor(_value), _cost, UpgradedCallback);
                 break;
         }
     }

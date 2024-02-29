@@ -27,7 +27,8 @@ public class ServiceLocatorLoader : MonoBehaviour
     private SettingsChanger _settingsChanger;
     private GrowablesService _growableService;
 
-    [SerializeField] AnimationsInitializer _animationsInitializer;
+    [SerializeField] private AnimationsInitializer _animationsInitializer;
+    [SerializeField] private UpgradePathsController _upgradePathsController; 
 
     private void Awake()
     {
@@ -45,6 +46,7 @@ public class ServiceLocatorLoader : MonoBehaviour
     private void BindMonoBehaviours()
     {
         BindObjectDestroyer();
+        BindUpgradePathController();
         BindTouchZone();
         BindTree();
         BindCustomCamera();
@@ -74,6 +76,12 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindSettingsChanger();
         BindButtonService();
         BindTouchHandler();
+    }
+
+    private void BindUpgradePathController()
+    {
+        _upgradePathsController.InitializeUpgradePaths(_growSettingsInstance);
+        ServiceLocator.Instance.Register(_upgradePathsController);
     }
 
     private void BindAnimationActivator()

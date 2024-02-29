@@ -48,7 +48,7 @@ public class SettingsChanger : IService
         var branchesCount = _growSettings.BranchesCount * _growSettings.BranchingValue;
         Debug.Log(_growSettings.UpgradeProgress);
         var suggestCoinsCount = (int)Mathf.Floor(Mathf.Lerp(1, _coinsSpawnSettings.MaxCoins, _growSettings.UpgradeProgress));
-        _coinsSpawnSettings.CoinsCount = Mathf.Clamp(suggestCoinsCount, 1, branchesCount);
+        _coinsSpawnSettings.CoinsCount = Mathf.Clamp(suggestCoinsCount, 1, branchesCount + 1);
 
         Debug.Log(_coinsSpawnSettings.SpawnChances[0].spawnChance);
         Debug.Log(_coinsSpawnSettings.CoinsCount);

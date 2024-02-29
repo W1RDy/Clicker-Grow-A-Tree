@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,14 +18,19 @@ public class GrowSettings : ScriptableObject
 
     private float _upgradeProgress;
 
+    public float MaxTrunkGrowSpeed => _maxTrunkGrowSpeed;
+    public float MaxBranchGrowSpeed => _maxBranchesGrowSpeed;
+    public int MaxBranchesCount => _maxBranchesCount;
+    public int MaxBranchingValue => _maxBranchingValue;
+
     public float TrunkGrowSpeed
     {
         get => _trunkGrowSpeed;
         set
         {
-            if ( _trunkGrowSpeed < value && value < _maxTrunkGrowSpeed)
+            if ( _trunkGrowSpeed < value && value <= _maxTrunkGrowSpeed)
             {
-                _trunkGrowSpeed = value;
+                _trunkGrowSpeed = (float)Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 UpgradeProgress = value;
             }
         }
@@ -34,9 +40,9 @@ public class GrowSettings : ScriptableObject
         get => _branchesGrowSpeed;
         set
         {
-            if (_branchesGrowSpeed < value && value < _maxBranchesGrowSpeed)
+            if (_branchesGrowSpeed < value && value <= _maxBranchesGrowSpeed)
             {
-                _branchesGrowSpeed = value;
+                _branchesGrowSpeed = (float)Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 UpgradeProgress = value;
             }
         }
@@ -46,7 +52,7 @@ public class GrowSettings : ScriptableObject
         get => _branchesCount;
         set
         {
-            if ( _branchesCount < value && value < _maxBranchesCount)
+            if ( _branchesCount < value && value <= _maxBranchesCount)
             {
                 _branchesCount = value;
                 UpgradeProgress = value;
@@ -58,7 +64,7 @@ public class GrowSettings : ScriptableObject
         get => _branchingValue;
         set
         {
-            if ( _branchingValue < value && value < _maxBranchingValue)
+            if ( _branchingValue < value && value <= _maxBranchingValue)
             {
                 _branchingValue = value;
                 UpgradeProgress = value;
