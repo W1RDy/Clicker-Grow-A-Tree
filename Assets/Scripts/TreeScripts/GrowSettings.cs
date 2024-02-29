@@ -10,14 +10,22 @@ public class GrowSettings : ScriptableObject
     [SerializeField, Min(0)] private int _branchesCount = 2;
     [SerializeField, Min(0)] private int _branchingValue = 1;
 
+    private float _maxTrunkGrowSpeed = 1f;
+    private float _maxBranchesGrowSpeed = 1f;
+    [SerializeField, Range(1,6)] private int _maxBranchesCount = 6;
+    [SerializeField, Range(1,2)] private int _maxBranchingValue = 2;
+
+    private float _upgradeProgress;
+
     public float TrunkGrowSpeed
     {
         get => _trunkGrowSpeed;
         set
         {
-            if ( _trunkGrowSpeed < value && value < 1)
+            if ( _trunkGrowSpeed < value && value < _maxTrunkGrowSpeed)
             {
                 _trunkGrowSpeed = value;
+                UpgradeProgress = value;
             }
         }
     }
@@ -26,9 +34,10 @@ public class GrowSettings : ScriptableObject
         get => _branchesGrowSpeed;
         set
         {
-            if (_branchesGrowSpeed < value && value < 1)
+            if (_branchesGrowSpeed < value && value < _maxBranchesGrowSpeed)
             {
                 _branchesGrowSpeed = value;
+                UpgradeProgress = value;
             }
         }
     }
@@ -37,9 +46,10 @@ public class GrowSettings : ScriptableObject
         get => _branchesCount;
         set
         {
-            if ( _branchesCount < value)
+            if ( _branchesCount < value && value < _maxBranchesCount)
             {
                 _branchesCount = value;
+                UpgradeProgress = value;
             }
         }
     }
@@ -48,10 +58,22 @@ public class GrowSettings : ScriptableObject
         get => _branchingValue;
         set
         {
-            if ( _branchingValue < value)
+            if ( _branchingValue < value && value < _maxBranchingValue)
             {
                 _branchingValue = value;
+                UpgradeProgress = value;
             }
+        }
+    }
+
+    public float UpgradeProgress
+    {
+        get => _upgradeProgress;
+        set
+        {
+            var _maxUpgradeValue = _maxTrunkGrowSpeed + _maxBranchesGrowSpeed + _maxBranchingValue + _maxBranchesCount;
+            var _currentUpgradeValue = _trunkGrowSpeed + _branchingValue + _branchesGrowSpeed + _branchesCount;
+            _upgradeProgress = _currentUpgradeValue / _maxUpgradeValue;
         }
     }
 }

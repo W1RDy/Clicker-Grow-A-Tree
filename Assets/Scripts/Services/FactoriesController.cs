@@ -45,7 +45,6 @@ public class FactoriesController : IService
     {
         var branchContainer = new GameObject("Branches");
         branchContainer.transform.SetParent(_tree.transform);
-
         _branchFactoryControllers = new BranchesFactoryController[_spawnSettings.Length];
         for (int i = 0; i < _branchFactoryControllers.Length; i++)
         {
@@ -71,6 +70,6 @@ public class FactoriesController : IService
 
     private void SpawnCoins(Transform relativeObj)
     {
-        _coinsFactoryController.SpawnCoins(5, relativeObj);
+        _coinsFactoryController.SpawnCoins(relativeObj);
     }
 }

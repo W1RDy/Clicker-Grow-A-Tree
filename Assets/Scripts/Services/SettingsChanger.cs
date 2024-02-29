@@ -4,32 +4,53 @@ using UnityEngine;
 
 public class SettingsChanger : IService
 {
-    private GrowSettings _gorwSettings;
+    private GrowSettings _growSettings;
     private CoinsSpawnSettings _coinsSpawnSettings;
 
     public SettingsChanger(GrowSettings settings, CoinsSpawnSettings coinsSpawnSettings)
     {
-        _gorwSettings = settings;
+        _growSettings = settings;
         _coinsSpawnSettings = coinsSpawnSettings;
     }
 
     public void ChangeGrowTrunkSpeed(float value)
     {
-        _gorwSettings.TrunkGrowSpeed += value;
+        _growSettings.TrunkGrowSpeed += value;
+        ChangeCoinsSpawnSettings();
     }
 
     public void ChangeGrowBranchSpeed(float value)
     {
-        _gorwSettings.BranchesGrowSpeed += value;
+        _growSettings.BranchesGrowSpeed += value;
+        ChangeCoinsSpawnSettings();
     }
 
     public void ChangeBranchCount(int value)
     {
-        _gorwSettings.BranchesCount += value;
+        _growSettings.BranchesCount += value;
+        ChangeCoinsSpawnSettings();
     }
 
     public void ChangeBranchingValue(int value)
     {
-        _gorwSettings.BranchingValue += value;
+        _growSettings.BranchingValue += value;
+        ChangeCoinsSpawnSettings();
+    }
+
+    private void ChangeCoinsSpawnSettings()
+    {
+        for (int i = 0; i < _growSettings.BranchingValue + 1; i++)
+        {
+            Debug.Log((int)Mathf.Round((1f / (_growSettings.BranchingValue + 1)) * 100));
+            _coinsSpawnSettings.SpawnChances[i].spawnChance = (int)Mathf.Round((1f / (_growSettings.BranchingValue + 1)) * 100);
+        }
+
+        var branchesCount = _growSettings.BranchesCount * _growSettings.BranchingValue;
+        Debug.Log(_growSettings.UpgradeProgress);
+        var suggestCoinsCount = (int)Mathf.Floor(Mathf.Lerp(1, _coinsSpawnSettings.MaxCoins, _growSettings.UpgradeProgress));
+        _coinsSpawnSettings.CoinsCount = Mathf.Clamp(suggestCoinsCount, 1, branchesCount);
+
+        Debug.Log(_coinsSpawnSettings.SpawnChances[0].spawnChance);
+        Debug.Log(_coinsSpawnSettings.CoinsCount);
     }
 }

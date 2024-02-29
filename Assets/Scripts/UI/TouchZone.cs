@@ -10,7 +10,6 @@ public class TouchZone : MonoBehaviour, IService, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Touch");
         Touch?.Invoke();
     }
 }

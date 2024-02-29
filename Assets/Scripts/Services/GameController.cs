@@ -26,7 +26,6 @@ public class GameController : MonoBehaviour, IService
     public void FinishTouchWaiting()
     {
         _animationActivator.FinishAnimation(AnimationType.Touch);
-        _animationActivator.ActivateAnimation(AnimationType.OpenUpgradeWindow);
     }
 
     private void Update()

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnChances:
   - level: 0
-    spawnChance: 50
+    spawnChance: 100
   - level: 1
-    spawnChance: 30
+    spawnChance: 0
   - level: 2
-    spawnChance: 20
+    spawnChance: 0
+  _coinsCount: 1
+  _maxCoins: 6

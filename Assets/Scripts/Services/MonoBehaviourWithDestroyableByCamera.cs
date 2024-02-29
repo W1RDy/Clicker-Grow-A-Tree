@@ -14,7 +14,6 @@ public abstract class MonoBehaviourWithDestroyableByCamera : MonoBehaviour
 
     public virtual void OnDestroy()
     {
-        Debug.Log("Destroy");
         Destroying?.Invoke(transform);
     }
 }

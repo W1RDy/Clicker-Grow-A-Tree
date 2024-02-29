@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _trunkGrowSpeed: 0.02
   _branchesGrowSpeed: 0.1
-  _branchesCount: 3
-  _branchingValue: 2
+  _branchesCount: 0
+  _branchingValue: 0
+  _maxBranchesCount: 6
+  _maxBranchingValue: 3

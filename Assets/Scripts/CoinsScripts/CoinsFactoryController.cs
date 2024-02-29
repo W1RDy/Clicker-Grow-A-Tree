@@ -19,9 +19,9 @@ public class CoinsFactoryController
         _busyPosService = new BusyPosService();
     }
 
-    public void SpawnCoins(int count, Transform relativeObj)
+    public void SpawnCoins(Transform relativeObj)
     {
-        for (var i = 0; i < count; i++)
+        for (var i = 0; i < _coinsSpawnSettings.CoinsCount; i++)
         {
             SpawnCoin(relativeObj);
         }
@@ -51,8 +51,7 @@ public class CoinsFactoryController
 
     public Vector2 GetRandomPosition(IGrowable growable)
     {
-        //var randomOffset = Random.Range(0, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
-        var randomOffset = growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f;
+        var randomOffset = Random.Range(0, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
         return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset);
     }
 
@@ -62,6 +61,7 @@ public class CoinsFactoryController
         if (growbaleLevel > 0)
         {
             var branches = _growablesService.GetBranches(growbaleLevel, relativeObj);
+            Debug.Log(branches.Count);
             var randomGrowable = branches[Random.Range(0, branches.Count)];
             return randomGrowable;
         }
@@ -73,15 +73,20 @@ public class CoinsFactoryController
         int random = Random.Range(1, 101);
         var growableLevel = 0;
         int sum = 0;
+        Debug.Log(random);
+        Debug.Log(_coinsSpawnSettings.SpawnChances[1].spawnChance);
         foreach (var chance in _coinsSpawnSettings.SpawnChances)
         {
+            Debug.Log(chance.spawnChance);
             sum += chance.spawnChance;
+            Debug.Log(sum);
             if (sum >= random)
             {
                 growableLevel = chance.level;
                 break;
             }
         }
+        Debug.Log(growableLevel);
         return growableLevel;
     }
 }

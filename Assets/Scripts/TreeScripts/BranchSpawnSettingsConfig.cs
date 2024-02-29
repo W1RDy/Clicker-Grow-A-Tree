@@ -14,7 +14,16 @@ public class BranchSpawnSettingsConfig : ScriptableObject
 
     public SpawnBranchSettings MinBranchSetting => _minBranchSetting;
     public SpawnBranchSettings MaxBranchSetting => _maxBranchSetting;
-    public float DistanceBetweenBranch => _distanceBetweenBranch;
+    public float DistanceBetweenBranch
+    {
+        get => _distanceBetweenBranch;
+        set
+        {
+            if (value.GetType() == typeof(float) && value > 0.2f)
+                _distanceBetweenBranch = value;
+        }
+    }
+
     public int BranchCount
     {
         get => _branchCount; 

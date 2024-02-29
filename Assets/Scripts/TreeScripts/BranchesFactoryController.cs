@@ -78,8 +78,11 @@ public class BranchesFactoryController
             }
             else
             {
-                Debug.LogError("All pos is busy!");
-                spawnPos = new Vector2(spawnPosX / relativeObj.localScale.x, maxSpawnBranchSettings.SpawnPos.y / relativeObj.localScale.y);
+                //spawnPos = new Vector2(spawnPosX / relativeObj.localScale.x, maxSpawnBranchSettings.SpawnPos.y / relativeObj.localScale.y);
+                _spawnSettingsConfig.DistanceBetweenBranch = (maxSpawnBranchSettings.SpawnPos.y - minSpawnBranchSettings.SpawnPos.y) / (_spawnSettingsConfig.BranchCount + 1);
+                tryCount = 0;
+                Debug.Log("Change");
+                continue;
             }
             _busyPosService.AddBusyPos(relativeObj, spawnPos);
             break;

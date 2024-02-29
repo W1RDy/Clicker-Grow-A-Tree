@@ -21,5 +21,5 @@ MonoBehaviour:
     _spawnRot: 87
     _isSpawnToRight: 1
   _distanceBetweenBranch: 1.2
-  _branchCount: 2
+  _branchCount: 0
   _maxBranchCount: 6
