@@ -16,7 +16,6 @@ public class BranchFactory : IFactory
     {
 
         _branchPrefab = Resources.Load<Branch>(BranchPath + _branchLevel);
-        Debug.Log("Branch");
     }
 
     public MonoBehaviour Create(Vector2 position, Quaternion rotation, Transform parent)

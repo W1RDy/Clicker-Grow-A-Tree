@@ -6,6 +6,8 @@ public class CoinsSpawnSettings : ScriptableObject
     [SerializeField] private SpawnChances[] _spawnChances;
     [SerializeField] private int _coinsCount;
     [SerializeField] private int _maxCoins;
+    [SerializeField] private float _distanceChangeIntensity;
+
     public SpawnChances[] SpawnChances => _spawnChances;
     public int MaxCoins => _maxCoins;
     public int CoinsCount
@@ -19,4 +21,5 @@ public class CoinsSpawnSettings : ScriptableObject
             }
         }
     }
+    public float DistanceChangeIntensity => _distanceChangeIntensity;
 }

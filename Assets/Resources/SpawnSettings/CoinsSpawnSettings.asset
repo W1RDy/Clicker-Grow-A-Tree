@@ -21,3 +21,4 @@ MonoBehaviour:
     spawnChance: 0
   _coinsCount: 1
   _maxCoins: 6
+  _distanceChangeIntensity: 4

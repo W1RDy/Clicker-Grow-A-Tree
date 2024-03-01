@@ -8,9 +8,11 @@ public class CoinsFactoryController
     private GrowablesService _growablesService;
     private CoinsFactory _coinsFactory;
     private BusyPosService _busyPosService;
+    private GrowSettings _growSettings;
 
-    public CoinsFactoryController(CoinsSpawnSettings coinsSpawnSettings)
+    public CoinsFactoryController(CoinsSpawnSettings coinsSpawnSettings, GrowSettings growSettings)
     {
+        _growSettings = growSettings;
         _coinsSpawnSettings = coinsSpawnSettings;
         _growablesService = ServiceLocator.Instance.Get<GrowablesService>();
         var container = new GameObject("Coins").transform;
@@ -51,7 +53,16 @@ public class CoinsFactoryController
 
     public Vector2 GetRandomPosition(IGrowable growable)
     {
-        var randomOffset = Random.Range(0, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
+        var valueByProgressForMinPoint = 1 / (Mathf.Clamp(1 - _growSettings.UpgradeProgress, 0.2f, 1));
+        var valueByProgressForMaxPoint = 1 / (Mathf.Clamp(_growSettings.UpgradeProgress, 0.1f, 1));
+
+        valueByProgressForMinPoint *= _coinsSpawnSettings.DistanceChangeIntensity;
+        valueByProgressForMaxPoint /= _coinsSpawnSettings.DistanceChangeIntensity;
+
+        var minPoint = Mathf.Clamp(0.4f * valueByProgressForMinPoint, 0.4f, 0.8f);
+        var maxPoint = Mathf.Clamp((growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f) / valueByProgressForMaxPoint, minPoint, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
+
+        var randomOffset = Random.Range(minPoint, maxPoint);
         return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset);
     }
 
@@ -73,20 +84,20 @@ public class CoinsFactoryController
         int random = Random.Range(1, 101);
         var growableLevel = 0;
         int sum = 0;
-        Debug.Log(random);
-        Debug.Log(_coinsSpawnSettings.SpawnChances[1].spawnChance);
+        //Debug.Log(random);
+        //Debug.Log(_coinsSpawnSettings.SpawnChances[1].spawnChance);
         foreach (var chance in _coinsSpawnSettings.SpawnChances)
         {
-            Debug.Log(chance.spawnChance);
+            //Debug.Log(chance.spawnChance);
             sum += chance.spawnChance;
-            Debug.Log(sum);
+            //Debug.Log(sum);
             if (sum >= random)
             {
                 growableLevel = chance.level;
                 break;
             }
         }
-        Debug.Log(growableLevel);
+        //Debug.Log(growableLevel);
         return growableLevel;
     }
 }

@@ -8,11 +8,17 @@ public class Trunk : MonoBehaviour, IGrowable
     private float _maxHeight = 0;
     private TrunkPart _heighestTrunkPart;
     private Action<Transform> _trunkPartCallback;
+    private CoroutineQueue _coroutineQueue;
+    private IGrowable _topFilledGrowable;
+    private Action<IGrowable> _endCoroutineCallback;
 
-    public void InitializeTrunk(TrunkPart trunkPartPrefab, Action<Transform> trunkPartCallback)
+    public void InitializeTrunk(TrunkPart trunkPartPrefab, Action<Transform> trunkPartCallback, CoroutineQueue coroutineQueue)
     {
+        _coroutineQueue = coroutineQueue;
         _trunkPartCallback = trunkPartCallback;
         _trunkPartPrefab = trunkPartPrefab;
+        _endCoroutineCallback = growable => _topFilledGrowable = growable;
+
         AddNewTrunkPart();
     }
 
@@ -23,28 +29,32 @@ public class Trunk : MonoBehaviour, IGrowable
             _heighestTrunkPart.Grow(1);
             AddNewTrunkPart();
         }
-        _heighestTrunkPart.Grow((sumHeight / _heighestTrunkPart.Height) % 1);
+        else
+        {
+            _heighestTrunkPart.Grow((sumHeight / _heighestTrunkPart.Height) % 1);
+        }
     }
 
     private void AddNewTrunkPart()
     {
         var spawnHeight = _maxHeight == 0 ? 0 : _maxHeight + _trunkPartPrefab.Height / 2;
         _heighestTrunkPart = Instantiate(_trunkPartPrefab, Vector2.zero, Quaternion.identity);
+        if (_topFilledGrowable == null) _topFilledGrowable = _heighestTrunkPart;
         _heighestTrunkPart.transform.SetParent(transform);
         _heighestTrunkPart.transform.localPosition = new Vector2(0, spawnHeight);
-        _heighestTrunkPart.InitializeTrunk(_trunkPartCallback);
+        _heighestTrunkPart.InitializeTrunk(_trunkPartCallback, _coroutineQueue, _endCoroutineCallback);
 
         _maxHeight = _heighestTrunkPart.transform.localPosition.y + _heighestTrunkPart.Height;
     }
 
     public Vector2 GetFilledTopLocalPoint()
     {
-        return _heighestTrunkPart.GetFilledTopLocalPoint();
+        return _topFilledGrowable.GetFilledTopLocalPoint();
     }
 
     public Vector2 GetFilledTopGlobalPoint()
     {
-        return _heighestTrunkPart.GetFilledTopGlobalPoint();
+        return _topFilledGrowable.GetFilledTopGlobalPoint();
     }
 
     public float GetMaxHeight()

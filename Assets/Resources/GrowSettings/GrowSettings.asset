@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d506945b13e4084bbf6ffe59af4320d, type: 3}
   m_Name: GrowSettings
   m_EditorClassIdentifier: 
-  _trunkGrowSpeed: 0.02
+  _trunkGrowSpeed: 0.2
   _branchesGrowSpeed: 0.1
-  _branchesCount: 0
+  _branchesCount: 1
   _branchingValue: 0
   _maxBranchesCount: 6
   _maxBranchingValue: 2

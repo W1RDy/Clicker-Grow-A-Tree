@@ -31,7 +31,7 @@ public class CameraMoveController : IMovable
 
     private void ChangeSpeedByDistance(Vector2 endPos)
     {
-        _speedMultiplyer = Vector2.Distance(_camera.position, endPos) / _camera.localScale.y;
+        _speedMultiplyer = (endPos.y - _camera.position.y) / _camera.localScale.y;
         _speedMultiplyer = Mathf.Clamp(_speedMultiplyer, 1f, 20f);
     }
 

@@ -140,7 +140,7 @@ public class ServiceLocatorLoader : MonoBehaviour
 
     private void BindCustomCamera()
     {
-        _customCamera.InitializeCamera();
+        _customCamera.InitializeCamera(_growSettingsInstance);
         ServiceLocator.Instance.Register(_customCamera);
     }
 
@@ -193,7 +193,7 @@ public class ServiceLocatorLoader : MonoBehaviour
     {
         var factoriesController = new FactoriesController();
         _growableService.InitializeService(factoriesController);
-        factoriesController.InitializeController(_branchSpawnSettingsConfigs, _coinsSpawnSettingsInstance);
+        factoriesController.InitializeController(_branchSpawnSettingsConfigs, _coinsSpawnSettingsInstance, _growSettingsInstance);
         ServiceLocator.Instance.Register(factoriesController);
     }
 }

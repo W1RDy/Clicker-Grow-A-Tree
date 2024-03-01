@@ -4,13 +4,20 @@ using UnityEngine;
 public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
 {
     private const string AppearValue = "_Fill";
+    private const float GrowTime = 0.2f;
     private Material _material;
     private float _currentGrowValue;
+    private float _previousFillingValue;
+    private CoroutineQueue _coroutineQueue;
     public float Height { get; private set; }
     private Action<float> LerpChangerCallback;
+    private Action<IGrowable> EndGrowCallback;
 
-    public void InitializeTrunk(Action<Transform> _callback)
+    public void InitializeTrunk(Action<Transform> _callback, CoroutineQueue coroutineQueue, Action<IGrowable> endGrowCallback)
     {
+        _coroutineQueue = coroutineQueue;
+        EndGrowCallback = endGrowCallback;
+
         var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         Height = transform.GetChild(0).localScale.y * spriteRenderer.sprite.bounds.size.y;
         _material = spriteRenderer.material;
@@ -26,8 +33,9 @@ public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
     public void Grow(float fillingValue)
     {
         if (fillingValue > 1) fillingValue = 1;
-        _currentGrowValue = fillingValue;
-        StartCoroutine(FloatLerpChanger.LerpFloatChangeCoroutine(_material.GetFloat(AppearValue), _currentGrowValue, 0.2f, LerpChangerCallback));
+        var routine = FloatLerpChanger.LerpFloatChangeCoroutine(_previousFillingValue, fillingValue, GrowTime, LerpChangerCallback, this, EndGrowCallback);
+        _previousFillingValue = fillingValue;
+        _coroutineQueue.StartCoroutineWithQueue(routine);
     }
 
     public Vector2 GetFilledTopLocalPoint()

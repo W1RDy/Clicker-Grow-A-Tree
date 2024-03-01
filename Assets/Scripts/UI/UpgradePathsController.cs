@@ -43,7 +43,6 @@ public class UpgradePathsController : MonoBehaviour, IService
     {
         if (!_allPathsActivated)
         {
-            Debug.Log(_growSettings.BranchingValue);
             if (_growSettings.BranchingValue != 0)
             {
                 ActivateUpgradePath(UpgradeType.BranchCount);
@@ -66,10 +65,12 @@ public class UpgradeConfig
 
     [SerializeField] private float _upgradeValueChanges;
     [SerializeField] private int _upgradeCostChanges;
+    [SerializeField] private float _changeIntensity;
 
     public UpgradeType UpgradeType => _upgradePath;
     public float UpgradeValueChanges => _upgradeValueChanges;
     public int UpgradeCostChanges => _upgradeCostChanges;
     public float StartUpgradeValue => _startUpgradeValue;
     public int StartUpgradeCost => _startUpgradeCost;
+    public float ChangeIntensity => _changeIntensity;
 }

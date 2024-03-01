@@ -40,8 +40,9 @@ public class UpgradePath : MonoBehaviour
     private void ChangeUpgradesParameters()
     {
         var valueByProgress = 1 / (Mathf.Clamp(1 - _growSettings.UpgradeProgress, 0.01f, 1));
-        _upgradeValue += (float)Math.Round(_upgradeConfig.UpgradeValueChanges * valueByProgress, 2, MidpointRounding.ToEven);
-        _upgradeCost += (int)Mathf.Floor(valueByProgress);
+        Debug.Log(valueByProgress);
+        _upgradeValue += (float)Math.Round(_upgradeConfig.UpgradeValueChanges * valueByProgress, 2, MidpointRounding.ToEven) * _upgradeConfig.ChangeIntensity;
+        _upgradeCost += (int)(Mathf.Floor(valueByProgress) * _upgradeConfig.ChangeIntensity);
 
         _upgradeButton.SetUpgradeParameters(_upgradeValue, _upgradeCost);
         ChangeParametersView();

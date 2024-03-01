@@ -12,12 +12,12 @@ public class FactoriesController : IService
 
     private Tree _tree;
 
-    public void InitializeController(BranchSpawnSettingsConfig[] spawnSettingsConfig, CoinsSpawnSettings coinsSpawnSettings)
+    public void InitializeController(BranchSpawnSettingsConfig[] spawnSettingsConfig, CoinsSpawnSettings coinsSpawnSettings, GrowSettings growSettings)
     {
         _tree = ServiceLocator.Instance.Get<Tree>();
         InitializeSpawnSettings(spawnSettingsConfig);
         InitializeBranchFactoryControllers();
-        _coinsFactoryController = new CoinsFactoryController(coinsSpawnSettings);
+        _coinsFactoryController = new CoinsFactoryController(coinsSpawnSettings, growSettings);
 
         _trunkSpawnCallback = relativeObj =>
         {

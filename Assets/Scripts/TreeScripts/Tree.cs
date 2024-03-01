@@ -7,8 +7,10 @@ public class Tree : MonoBehaviour, IService, IGrowable
 {
     [SerializeField] private Trunk _trunk;
     [SerializeField] private TrunkPart _trunkPartPrefab;
+    private CoroutineQueue _coroutineQueue;
 
     private float _height = 0;
+    private float _trunkHeight;
     public GrowSettings GrowSettings {get; private set;}
 
     public void SetGrowSettings(GrowSettings growSettings)
@@ -18,13 +20,18 @@ public class Tree : MonoBehaviour, IService, IGrowable
 
     public void InitializeTree(Action<Transform> relativeObjCallback)
     {
-        _trunk.InitializeTrunk(_trunkPartPrefab, relativeObjCallback);
+        _coroutineQueue = new CoroutineQueue(this, 7);
+        _trunk.InitializeTrunk(_trunkPartPrefab, relativeObjCallback, _coroutineQueue);
+        _trunkHeight = _trunkPartPrefab.transform.GetChild(0).localScale.y * _trunkPartPrefab.GetComponentInChildren<SpriteRenderer>().sprite.bounds.size.y;
     }
 
     public void Grow(float growValue)
     {
-        _height += _trunkPartPrefab.transform.GetChild(0).localScale.y * growValue;
-        _trunk.Grow(_height);
+        if (!_coroutineQueue.IsCrowded)
+        {
+            _height += _trunkHeight * growValue;
+            _trunk.Grow(_height);
+        }
     }
 
     public float GetHeight()

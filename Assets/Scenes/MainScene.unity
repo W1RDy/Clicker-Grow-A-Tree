@@ -770,7 +770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f13d25138cd4db46a727c35cae22764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 0.5
+  _speed: 1
   heightOffset: 1
 --- !u!1 &672565401
 GameObject:
@@ -3150,25 +3150,29 @@ MonoBehaviour:
   - {fileID: 1340443787}
   _upgradeConfigs:
   - _upgradePath: 0
-    _startUpgradeValue: 0.02
+    _startUpgradeValue: 0.005
     _startUpgradeCost: 1
-    _upgradeValueChanges: 0.1
+    _upgradeValueChanges: 0.01
     _upgradeCostChanges: 1
+    _changeIntensity: 1.1
   - _upgradePath: 2
     _startUpgradeValue: 1
     _startUpgradeCost: 4
     _upgradeValueChanges: 0
     _upgradeCostChanges: 8
+    _changeIntensity: 0
   - _upgradePath: 3
     _startUpgradeValue: 1
     _startUpgradeCost: 3
     _upgradeValueChanges: 0
     _upgradeCostChanges: 2
+    _changeIntensity: 0
   - _upgradePath: 1
     _startUpgradeValue: 0.1
     _startUpgradeCost: 1
     _upgradeValueChanges: 0.1
     _upgradeCostChanges: 1
+    _changeIntensity: 0
 --- !u!4 &1923413471
 Transform:
   m_ObjectHideFlags: 0
