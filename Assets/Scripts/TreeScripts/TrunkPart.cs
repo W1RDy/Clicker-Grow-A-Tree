@@ -40,7 +40,7 @@ public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
 
     public Vector2 GetFilledTopLocalPoint()
     {
-        var fillingValue = _material.GetFloat(AppearValue);
+        var fillingValue = _currentGrowValue;
         var fillingHeight = Height * fillingValue;
         return new Vector2(0, fillingHeight);
     }

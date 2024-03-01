@@ -11,8 +11,10 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private CoinsSpawnSettings _coinsSpawnSettings;
     [SerializeField] private BranchSpawnSettingsConfig[] _branchSpawnSettingsConfigs;
     [SerializeField] private AudioData _audioData;
+    [SerializeField] private LocalizationData _localizationData;
     private GrowSettings _growSettingsInstance;
     private CoinsSpawnSettings _coinsSpawnSettingsInstance;
+    private LocalizationData _localizationDataInstance;
 
     [SerializeField] private TouchZone _touchZone;
     [SerializeField] private ScoreIndicator _scoreIndicator;
@@ -28,12 +30,14 @@ public class ServiceLocatorLoader : MonoBehaviour
     private GrowablesService _growableService;
 
     [SerializeField] private AnimationsInitializer _animationsInitializer;
-    [SerializeField] private UpgradePathsController _upgradePathsController; 
+    [SerializeField] private UpgradePathsController _upgradePathsController;
+    [SerializeField] private ADVService _advService;
 
     private void Awake()
     {
         _growSettingsInstance = Instantiate(_growSettings);
         _coinsSpawnSettingsInstance = Instantiate(_coinsSpawnSettings);
+        _localizationDataInstance = Instantiate(_localizationData);
         Bind();
     }
 
@@ -58,10 +62,13 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindAudioPlayer();
 
         BindAnimationActivator();
+        BindLocalizationService();
 
         BindGameController();
         BindScoreIndicator();
         BindScoreCounter();
+
+        BindADVService();
 
         BindWindowService();
         BindWindowActivator();
@@ -78,9 +85,20 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindTouchHandler();
     }
 
+    private void BindLocalizationService()
+    {
+        var localizationService = new LocalizationService(_localizationDataInstance);
+        ServiceLocator.Instance.Register(localizationService);
+    }
+
+    private void BindADVService()
+    {
+        ServiceLocator.Instance.Register(_advService);
+    }
+
     private void BindUpgradePathController()
     {
-        _upgradePathsController.InitializeUpgradePaths(_growSettingsInstance);
+        _upgradePathsController.InitializeUpgradePaths(_growSettingsInstance, _coinsSpawnSettingsInstance);
         ServiceLocator.Instance.Register(_upgradePathsController);
     }
 

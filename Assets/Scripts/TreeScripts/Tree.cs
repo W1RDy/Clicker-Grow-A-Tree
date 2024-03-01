@@ -20,7 +20,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
 
     public void InitializeTree(Action<Transform> relativeObjCallback)
     {
-        _coroutineQueue = new CoroutineQueue(this, 7);
+        _coroutineQueue = new CoroutineQueue(this, 12);
         _trunk.InitializeTrunk(_trunkPartPrefab, relativeObjCallback, _coroutineQueue);
         _trunkHeight = _trunkPartPrefab.transform.GetChild(0).localScale.y * _trunkPartPrefab.GetComponentInChildren<SpriteRenderer>().sprite.bounds.size.y;
     }

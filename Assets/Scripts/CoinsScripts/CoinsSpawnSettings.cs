@@ -7,6 +7,8 @@ public class CoinsSpawnSettings : ScriptableObject
     [SerializeField] private int _coinsCount;
     [SerializeField] private int _maxCoins;
     [SerializeField] private float _distanceChangeIntensity;
+    [SerializeField] private int _coinsCosts;
+    [SerializeField] private int _maxCosts;
 
     public SpawnChances[] SpawnChances => _spawnChances;
     public int MaxCoins => _maxCoins;
@@ -15,11 +17,28 @@ public class CoinsSpawnSettings : ScriptableObject
         get => _coinsCount;
         set
         {
-            if (value > _coinsCount && value < _maxCoins)
+            if (value <= _maxCoins)
             {
                 _coinsCount = value;
             }
         }
     }
     public float DistanceChangeIntensity => _distanceChangeIntensity;
+    public int CoinsCosts 
+    {
+        get => _coinsCosts;
+        set
+        {
+            if  (_coinsCosts < value && value <= _maxCosts)
+            {
+                _coinsCosts = value;
+            }
+            else if (value > _maxCosts && _coinsCosts != _maxCosts)
+            {
+                _coinsCosts = _maxCoins;
+            }
+        }
+    }
+
+    public int MaxCosts => _maxCosts;
 }

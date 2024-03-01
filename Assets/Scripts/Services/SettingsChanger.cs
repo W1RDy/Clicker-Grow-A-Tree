@@ -35,6 +35,11 @@ public class SettingsChanger : IService
         ChangeCoinsSpawnSettings();
     }
 
+    public void ChangeCoinsCosts(int value)
+    {
+        _coinsSpawnSettings.CoinsCosts += value;
+    }
+
     private void ChangeCoinsSpawnSettings()
     {
         for (int i = 0; i < _growSettings.BranchingValue + 1; i++)

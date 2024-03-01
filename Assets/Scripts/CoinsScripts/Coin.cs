@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class Coin : MonoBehaviourWithDestroyableByCamera
 {
-    [SerializeField] private int _cost;
+    private CoinsSpawnSettings _settings;
     private IGrowable _growable;
     private CoinsCounter _coinsCounter;
     private Vector2 _positionInGrowableCoord;
@@ -17,8 +17,9 @@ public class Coin : MonoBehaviour
         _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
     }
 
-    public void ConnectGrowable(IGrowable growable)
+    public void Initialize(IGrowable growable, CoinsSpawnSettings coinsSpawnSettings)
     {
+        _settings = coinsSpawnSettings;
         _growable = growable;
         _positionInGrowableCoord = _growable.GetGrowableTransform().InverseTransformPoint(transform.position);
         if (Vector3.Distance(growable.GetFilledTopLocalPoint(), _positionInGrowableCoord) < 0.2f)
@@ -39,7 +40,7 @@ public class Coin : MonoBehaviour
 
     private void CollectCoin()
     {
-        _coinsCounter.AddCoins(_cost);
+        _coinsCounter.AddCoins(_settings.CoinsCosts);
         _audioPlayer.PlaySounds("CollectLeaf");
         Destroy(gameObject);
     }

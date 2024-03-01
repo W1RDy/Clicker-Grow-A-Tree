@@ -8,13 +8,13 @@ public class UpgradePathsController : MonoBehaviour, IService
     private GrowSettings _growSettings;
     private bool _allPathsActivated;
 
-    public void InitializeUpgradePaths(GrowSettings growSettings)
+    public void InitializeUpgradePaths(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
     {
         _growSettings = growSettings;
         foreach (var upgradePath in _upgradePaths)
         {
             var upgradeConfig = FindUpgradeConfig(upgradePath.UpgradeType);
-            upgradePath.InitializeUpgradePath(growSettings, upgradeConfig);
+            upgradePath.InitializeUpgradePath(growSettings, coinsSpawnSettings, upgradeConfig);
         }
     }
 
@@ -60,17 +60,19 @@ public class UpgradePathsController : MonoBehaviour, IService
 public class UpgradeConfig
 {
     [SerializeField] private UpgradeType _upgradePath;
-    [SerializeField] private float _startUpgradeValue;
-    [SerializeField] private int _startUpgradeCost;
+    [SerializeField] private float[] _startUpgradeValue;
+    [SerializeField] private int[] _startUpgradeCost;
 
     [SerializeField] private float _upgradeValueChanges;
-    [SerializeField] private int _upgradeCostChanges;
-    [SerializeField] private float _changeIntensity;
+    [SerializeField] private float _upgradeCostChanges;
+    [SerializeField] private float _changeValueIntensity;
+    [SerializeField] private float _changeCostIntensity;
 
     public UpgradeType UpgradeType => _upgradePath;
     public float UpgradeValueChanges => _upgradeValueChanges;
-    public int UpgradeCostChanges => _upgradeCostChanges;
-    public float StartUpgradeValue => _startUpgradeValue;
-    public int StartUpgradeCost => _startUpgradeCost;
-    public float ChangeIntensity => _changeIntensity;
+    public float UpgradeCostChanges => _upgradeCostChanges;
+    public float[] UpgradeValues => _startUpgradeValue;
+    public int[] UpgradeCosts => _startUpgradeCost;
+    public float ChangeValueIntensity => _changeValueIntensity;
+    public float ChangeCostIntensity => _changeCostIntensity;
 }

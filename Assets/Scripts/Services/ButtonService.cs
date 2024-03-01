@@ -10,12 +10,16 @@ public class ButtonService : MonoBehaviour, IService
     private AudioPlayer _audioPlayer;
     private CoinsCounter _coinsCounter;
 
+    private Action RewardCollected;
+    private ADVService _advService;
+
     private void Start()
     {
         _settigsChanger = ServiceLocator.Instance.Get<SettingsChanger>();
         _windowActivator = ServiceLocator.Instance.Get<WindowActivator>();
         _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
         _coinsCounter = ServiceLocator.Instance.Get<CoinsCounter>();
+        _advService = ServiceLocator.Instance.Get<ADVService>();
     }
 
     public void UpgradeTrunkSpeed(float value, int cost, Action callback)
@@ -60,6 +64,18 @@ public class ButtonService : MonoBehaviour, IService
             RemoveCoins(cost);
             callback?.Invoke();
         }
+    }
+
+    public void UpgradeCoinsCostsForADV(int value, Action callback)
+    {
+        _advService.ActivateADVForReward(value);
+        RewardCollected = callback;
+    }
+
+    public void UpgradeCoinsCosts(int value)
+    {
+        _settigsChanger.ChangeCoinsCosts(value);
+        RewardCollected?.Invoke();
     }
 
     public void ActivateUpgradeWindow()

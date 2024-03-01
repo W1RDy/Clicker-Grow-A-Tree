@@ -26,6 +26,12 @@ public class ObjectsDestoyer : MonoBehaviour, IService
     {
         foreach (var destroyable in _destroyables)
         {
+            if (destroyable == null)
+            {
+                _destroyables.Remove(destroyable);
+                break;
+            }
+
             var spriteRenderer = destroyable.transform.GetChild(0).GetComponent<SpriteRenderer>();
             if (spriteRenderer.bounds.max.y < _customCamera.GetBottomBorderPoint().y)
             {

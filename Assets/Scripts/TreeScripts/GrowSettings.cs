@@ -6,13 +6,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GrowSettings", menuName = "GrowSettings/new GrowSettings")]
 public class GrowSettings : ScriptableObject
 {
-    [SerializeField, Range(0, 1)] private float _trunkGrowSpeed = 0.02f;
-    [SerializeField, Range(0, 1)] private float _branchesGrowSpeed = 0.1f;
+    [SerializeField, Range(0, 0.7f)] private float _trunkGrowSpeed = 0.02f;
+    [SerializeField, Range(0, 0.7f)] private float _branchesGrowSpeed = 0.1f;
     [SerializeField, Min(0)] private int _branchesCount = 2;
     [SerializeField, Min(0)] private int _branchingValue = 1;
 
-    private float _maxTrunkGrowSpeed = 1f;
-    private float _maxBranchesGrowSpeed = 1f;
+    private float _maxTrunkGrowSpeed = 0.7f;
+    private float _maxBranchesGrowSpeed = 0.7f;
     [SerializeField, Range(1,6)] private int _maxBranchesCount = 6;
     [SerializeField, Range(1,2)] private int _maxBranchingValue = 2;
 
@@ -33,6 +33,11 @@ public class GrowSettings : ScriptableObject
                 _trunkGrowSpeed = (float)Math.Round(value, 2, MidpointRounding.AwayFromZero);
                 UpgradeProgress = value;
             }
+            else if (value > _maxTrunkGrowSpeed && _trunkGrowSpeed != _maxTrunkGrowSpeed)
+            {
+                _trunkGrowSpeed = _maxTrunkGrowSpeed;
+                UpgradeProgress = value;
+            }
         }
     }
     public float BranchesGrowSpeed
@@ -43,6 +48,11 @@ public class GrowSettings : ScriptableObject
             if (_branchesGrowSpeed < value && value <= _maxBranchesGrowSpeed)
             {
                 _branchesGrowSpeed = (float)Math.Round(value, 2, MidpointRounding.AwayFromZero);
+                UpgradeProgress = value;
+            }
+            else if (value > _branchesGrowSpeed && _branchesGrowSpeed != _maxBranchesGrowSpeed)
+            {
+                _branchesGrowSpeed = _maxBranchesGrowSpeed;
                 UpgradeProgress = value;
             }
         }
@@ -57,6 +67,11 @@ public class GrowSettings : ScriptableObject
                 _branchesCount = value;
                 UpgradeProgress = value;
             }
+            else if (value > _maxBranchesCount && _branchesCount != _maxBranchesCount)
+            {
+                _branchesCount = _maxBranchesCount;
+                UpgradeProgress = value;
+            }
         }
     }
     public int BranchingValue
@@ -67,6 +82,11 @@ public class GrowSettings : ScriptableObject
             if ( _branchingValue < value && value <= _maxBranchingValue)
             {
                 _branchingValue = value;
+                UpgradeProgress = value;
+            }
+            else if (value > _maxBranchingValue && _branchingValue != _maxBranchingValue)
+            {
+                _branchingValue = _maxBranchingValue;
                 UpgradeProgress = value;
             }
         }

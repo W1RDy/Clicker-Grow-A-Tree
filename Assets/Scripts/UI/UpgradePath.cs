@@ -7,6 +7,7 @@ public class UpgradePath : MonoBehaviour
     private UpgradeConfig _upgradeConfig;
     private float _upgradeValue;
     private int _upgradeCost;
+    private int _upgradeCount;
 
     public UpgradeType UpgradeType => _upgradeType;
 
@@ -14,16 +15,19 @@ public class UpgradePath : MonoBehaviour
     private UpgradePathView _pathView;
     [SerializeField] private UpgradeButton _upgradeButton;
     private GrowSettings _growSettings;
+    private CoinsSpawnSettings _coinsSpawnSettings;
 
     [SerializeField] private bool _isActivated;
 
-    public void InitializeUpgradePath(GrowSettings growSettings, UpgradeConfig upgradeConfig)
+    public void InitializeUpgradePath(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings, UpgradeConfig upgradeConfig)
     {
         _growSettings = growSettings;
+        _coinsSpawnSettings = coinsSpawnSettings;
         _upgradeConfig = upgradeConfig;
 
-        _upgradeValue = upgradeConfig.StartUpgradeValue;
-        _upgradeCost = upgradeConfig.StartUpgradeCost;
+        _upgradeValue = upgradeConfig.UpgradeValues[0];
+        _upgradeCost = upgradeConfig.UpgradeCosts[0];
+        _upgradeCount = 0;
 
         _indicatorsController = GetComponent<UpgradePathIndicatorsController>();
         _pathView = GetComponent<UpgradePathView>();
@@ -39,19 +43,37 @@ public class UpgradePath : MonoBehaviour
 
     private void ChangeUpgradesParameters()
     {
-        var valueByProgress = 1 / (Mathf.Clamp(1 - _growSettings.UpgradeProgress, 0.01f, 1));
-        Debug.Log(valueByProgress);
-        _upgradeValue += (float)Math.Round(_upgradeConfig.UpgradeValueChanges * valueByProgress, 2, MidpointRounding.ToEven) * _upgradeConfig.ChangeIntensity;
-        _upgradeCost += (int)(Mathf.Floor(valueByProgress) * _upgradeConfig.ChangeIntensity);
+        _upgradeCount ++;
+        var parameters = GetParameters(UpgradeType);
+        var valueByProgress = 1 / (Mathf.Clamp(1 - parameters.currentParameter / parameters.maxParameter, 0.01f, 1));
 
-        _upgradeButton.SetUpgradeParameters(_upgradeValue, _upgradeCost);
+        if (_upgradeConfig.UpgradeValues.Length - 1 >= _upgradeCount) _upgradeValue = _upgradeConfig.UpgradeValues[_upgradeCount];
+        else _upgradeValue += (float)Math.Round(_upgradeConfig.UpgradeValueChanges * valueByProgress, 2, MidpointRounding.ToEven) * _upgradeConfig.ChangeValueIntensity;
+
+        if (_upgradeConfig.UpgradeCosts.Length - 1 >= _upgradeCount) _upgradeCost = _upgradeConfig.UpgradeCosts[_upgradeCount];
+        else _upgradeCost += (int)(Mathf.Floor(_upgradeConfig.UpgradeCostChanges * valueByProgress) * _upgradeConfig.ChangeCostIntensity);
+
         ChangeParametersView();
     }
 
     private void ChangeParametersView()
     {
         var parameters = GetParameters(_upgradeType);
+
+        if (parameters.currentParameter == parameters.maxParameter)
+        {
+            _upgradeValue = 0;
+            _upgradeCost = 0;
+        }
+        else if (parameters.currentParameter + _upgradeValue > parameters.maxParameter)
+        {
+            _upgradeValue = parameters.maxParameter - parameters.currentParameter;
+        }
+
+        _upgradeButton.SetUpgradeParameters(_upgradeValue, _upgradeCost);
         _indicatorsController.UpdateIndicators(_upgradeValue, parameters.currentParameter);
+
+        if (parameters.currentParameter == parameters.maxParameter) DeactivateUpgradePath();
     }
 
     public void ActivateUpgradePath()
@@ -60,6 +82,15 @@ public class UpgradePath : MonoBehaviour
         {
             _isActivated = true;
             _pathView.ActivatePath();
+        }
+    }
+
+    private void DeactivateUpgradePath()
+    {
+        if (_isActivated)
+        {
+            _isActivated = false;
+            _pathView.DeactivatePath();
         }
     }
 
@@ -75,6 +106,8 @@ public class UpgradePath : MonoBehaviour
                 return (_growSettings.BranchingValue, _growSettings.MaxBranchingValue);
             case UpgradeType.BranchCount:
                 return (_growSettings.BranchesCount, _growSettings.MaxBranchesCount);
+            case UpgradeType.CoinsCosts:
+                return (_coinsSpawnSettings.CoinsCosts, 2);
         }
         throw new System.ArgumentNullException("Parameters with type " + upgradeType + " doesn't exist!");
     }

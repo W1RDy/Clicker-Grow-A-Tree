@@ -34,7 +34,7 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
 
     public void Grow(float growValue)
     {
-        if (_relativeObj != null && _growableParent.GetFilledTopLocalPoint().y >= _relativeObj.InverseTransformPoint(transform.position).y)
+        if (_relativeObj != null && _growableParent.GetFilledTopLocalPoint().y >= _relativeObj.InverseTransformPoint(transform.position).y + 0.1f)
         {
             _currentGrowValue += growValue;
             if (_currentGrowValue > 1) _currentGrowValue = 1;

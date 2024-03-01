@@ -40,7 +40,11 @@ public class UpgradeButton : MonoBehaviour
 
     private void SetCostText()
     {
-        _costText.text = _cost.ToString();
+        if (_cost == 0)
+        {
+            _costText.text = "";
+        }
+        else _costText.text = _cost.ToString();
     }
 
     public void Upgrade()
@@ -59,6 +63,9 @@ public class UpgradeButton : MonoBehaviour
             case UpgradeType.BranchCount:
                 _buttonService.UpgradeBranchCounts((int)Mathf.Floor(_value), _cost, UpgradedCallback);
                 break;
+            case UpgradeType.CoinsCosts:
+                _buttonService.UpgradeCoinsCostsForADV((int)_value, UpgradedCallback);
+                break;
         }
     }
 }
@@ -68,5 +75,6 @@ public enum UpgradeType
     TrunkSpeed,
     BranchSpeed,
     BranchingValue,
-    BranchCount
+    BranchCount,
+    CoinsCosts
 }

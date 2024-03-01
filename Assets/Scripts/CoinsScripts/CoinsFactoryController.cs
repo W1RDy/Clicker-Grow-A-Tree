@@ -9,6 +9,8 @@ public class CoinsFactoryController
     private CoinsFactory _coinsFactory;
     private BusyPosService _busyPosService;
     private GrowSettings _growSettings;
+    private bool _isFirstSpawn;
+    private float _spawnDistance = 2f;
 
     public CoinsFactoryController(CoinsSpawnSettings coinsSpawnSettings, GrowSettings growSettings)
     {
@@ -19,6 +21,7 @@ public class CoinsFactoryController
         _coinsFactory = new CoinsFactory(container);
         _coinsFactory.LoadResources();
         _busyPosService = new BusyPosService();
+        _isFirstSpawn = true;
     }
 
     public void SpawnCoins(Transform relativeObj)
@@ -27,17 +30,29 @@ public class CoinsFactoryController
         {
             SpawnCoin(relativeObj);
         }
+
+        if (_isFirstSpawn)
+        {
+            _isFirstSpawn = false;
+            var growable = GetRandomGrowable(relativeObj);
+            SpawnCoin(relativeObj, 0.5f, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
+        }
     }
 
     private void SpawnCoin(Transform relativeObj)
+    {
+        SpawnCoin(relativeObj, 0, 0);
+    }
+
+    private void SpawnCoin(Transform relativeObj, float minPoint, float maxPoint)
     {
         IGrowable growable;
         Vector2 position;
         while (true)
         {
             growable = GetRandomGrowable(relativeObj);
-            position = GetRandomPosition(growable);
-            if (!_busyPosService.CheckPosition(position, growable.GetGrowableTransform(), 2f))
+            position = GetRandomPosition(growable, minPoint, maxPoint);
+            if (!_busyPosService.CheckPosition(position, growable.GetGrowableTransform(), _spawnDistance))
             {
                 Debug.Log("All Busy");
                 continue;
@@ -48,7 +63,17 @@ public class CoinsFactoryController
             break;
         }
         var coin = _coinsFactory.Create(position, Quaternion.identity, null) as Coin;
-        coin.ConnectGrowable(growable);
+        coin.Initialize(growable, _coinsSpawnSettings);
+    }
+
+    private Vector2 GetRandomPosition(IGrowable growable, float minPoint, float maxPoint)
+    {
+        if (minPoint == 0 && maxPoint == 0)
+        {
+            return GetRandomPosition(growable);
+        }
+        var randomOffset = Random.Range(minPoint, maxPoint);
+        return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset);
     }
 
     public Vector2 GetRandomPosition(IGrowable growable)
@@ -59,11 +84,10 @@ public class CoinsFactoryController
         valueByProgressForMinPoint *= _coinsSpawnSettings.DistanceChangeIntensity;
         valueByProgressForMaxPoint /= _coinsSpawnSettings.DistanceChangeIntensity;
 
-        var minPoint = Mathf.Clamp(0.4f * valueByProgressForMinPoint, 0.4f, 0.8f);
+        var minPoint = Mathf.Clamp(0.4f * valueByProgressForMinPoint, 0.2f, 0.8f);
         var maxPoint = Mathf.Clamp((growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f) / valueByProgressForMaxPoint, minPoint, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
 
-        var randomOffset = Random.Range(minPoint, maxPoint);
-        return new Vector2(0, growable.GetFilledTopLocalPoint().y + randomOffset);
+        return GetRandomPosition(growable, minPoint, maxPoint);
     }
 
     public IGrowable GetRandomGrowable(Transform relativeObj)
