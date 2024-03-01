@@ -8,7 +8,7 @@ mergeInto(LibraryManager.library, {
     ysdk.adv.showFullscreenAdv({
       callbacks: {
         onClose: function(wasShown) {
-          myGameInstance.SendMessage('AudioPlayer', 'SetSettings', 'true');
+          myGameInstance.SendMessage('BrowserRequestHandler', 'SetAudioSettings', 'true');
         },
         onError: function(error) {
           // some action on error
@@ -26,18 +26,17 @@ mergeInto(LibraryManager.library, {
         },
         onRewarded: function(){
           console.log('Rewarded!');
-          myGameInstance.SendMessage('ButtonService', 'UpgradeCoinsCosts', value)
+          myGameInstance.SendMessage('BrowserRequestHandler', 'GetReward', value)
           isRewarded = true;
         },
         onClose: function(){
           console.log('Video ad closed.');
-          myGameInstance.SendMessage('AudioManager', 'SetSettings', 'true');
+          myGameInstance.SendMessage('BrowserRequestHandler', 'SetAudioSettings', 'true');
           }
         }, 
         onError: function(e){
           console.log('Error while open video ad:', e);
         }
-      }
     })
   },
 
