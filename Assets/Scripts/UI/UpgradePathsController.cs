@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class UpgradePathsController : MonoBehaviour, IService
 {
-    [SerializeField] private UpgradePath[] _upgradePaths;
+    [SerializeField] private UpgradePath[] _upgradePathsMobile;
+    [SerializeField] private UpgradePath[] _upgradePathsPC;
     [SerializeField] private UpgradeConfig[] _upgradeConfigs;
     private GrowSettings _growSettings;
     private bool _allPathsActivated;
@@ -11,7 +12,9 @@ public class UpgradePathsController : MonoBehaviour, IService
     public void InitializeUpgradePaths(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
     {
         _growSettings = growSettings;
-        foreach (var upgradePath in _upgradePaths)
+        UpgradePath[] upgradePaths = Screen.height < Screen.width ? _upgradePathsPC : _upgradePathsMobile;
+
+        foreach (var upgradePath in upgradePaths)
         {
             var upgradeConfig = FindUpgradeConfig(upgradePath.UpgradeType);
             upgradePath.InitializeUpgradePath(growSettings, coinsSpawnSettings, upgradeConfig);
@@ -29,7 +32,7 @@ public class UpgradePathsController : MonoBehaviour, IService
 
     public void ActivateUpgradePath(UpgradeType upgradeType)
     {
-        foreach (var upgradePath in _upgradePaths)
+        foreach (var upgradePath in _upgradePathsMobile)
         {
             if (upgradePath.UpgradeType == upgradeType)
             {
