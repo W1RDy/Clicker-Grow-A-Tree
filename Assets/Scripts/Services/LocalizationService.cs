@@ -41,7 +41,7 @@ public class LocalizationService : IService
                 return phrase.ruText;
             case "en":
                 return phrase.enText;
-            case "tu":
+            case "tr":
                 return phrase.tuText;
         }
 

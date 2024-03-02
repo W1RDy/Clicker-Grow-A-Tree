@@ -35,7 +35,8 @@ public class TrunkPart : MonoBehaviourWithDestroyableByCamera, IGrowable
         if (fillingValue > 1) fillingValue = 1;
         var routine = FloatLerpChanger.LerpFloatChangeCoroutine(_previousFillingValue, fillingValue, GrowTime, LerpChangerCallback, this, EndGrowCallback);
         _previousFillingValue = fillingValue;
-        _coroutineQueue.StartCoroutineWithQueue(routine);
+        if (fillingValue == 1) _coroutineQueue.StartRequiredCoroutineWithQueue(routine);
+        else _coroutineQueue.StartCoroutineWithQueue(routine);
     }
 
     public Vector2 GetFilledTopLocalPoint()

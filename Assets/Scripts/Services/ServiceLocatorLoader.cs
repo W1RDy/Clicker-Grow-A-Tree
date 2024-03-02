@@ -32,6 +32,7 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private AnimationsInitializer _animationsInitializer;
     [SerializeField] private UpgradePathsController _upgradePathsController;
     [SerializeField] private ADVService _advService;
+    [SerializeField] private TutorialController _tutorController;
 
     private void Awake()
     {
@@ -64,7 +65,6 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindAnimationActivator();
         BindLocalizationService();
 
-        BindGameController();
         BindScoreIndicator();
         BindScoreCounter();
 
@@ -75,6 +75,9 @@ public class ServiceLocatorLoader : MonoBehaviour
 
         BindCoinsCounter();
 
+        BindTutorialController();
+        BindGameController();
+
         BindGrowablesService();
         BindGrowController();
 
@@ -83,6 +86,12 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindSettingsChanger();
         BindButtonService();
         BindTouchHandler();
+    }
+
+    private void BindTutorialController()
+    {
+        _tutorController.Initialize(_growSettingsInstance);
+        ServiceLocator.Instance.Register(_tutorController);
     }
 
     private void BindLocalizationService()

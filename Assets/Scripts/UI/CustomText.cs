@@ -19,7 +19,6 @@ public class CustomText : MonoBehaviour
     public void SetText(string index)
     {
         var message = _localizationService.GetPhrase(index);
-        Debug.Log(message);
         Text.text = message;
     }
 }

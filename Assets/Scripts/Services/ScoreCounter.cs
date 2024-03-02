@@ -15,6 +15,7 @@ public class ScoreCounter : IService
     public void UpdateScore(float value)
     {
         _score = (int)Mathf.Ceil(value * 10);
+        InteractorWithBrowser.SaveScoreInLeaderboard(_score);
         _scoreIndicator.SetScore(_score);
     }
 }

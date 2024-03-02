@@ -36,7 +36,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
 
     public float GetHeight()
     {
-        return _height;
+        return transform.InverseTransformPoint(GetFilledTopGlobalPoint()).y;
     }
 
     public Vector2 GetFilledTopLocalPoint()

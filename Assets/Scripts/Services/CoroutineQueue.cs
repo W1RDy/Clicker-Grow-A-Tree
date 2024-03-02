@@ -19,14 +19,19 @@ public class CoroutineQueue
 
     public void StartCoroutineWithQueue(IEnumerator routine)
     {
-        _isCrowded = _queue.Count >= _maxCounts;
         if (!_isCrowded)
         {
-            _queue.Enqueue(routine);
-            if (_queue.Count == 1)
-            {
-                StartQueueCycle();
-            }
+            _isCrowded = _queue.Count >= _maxCounts;
+            StartRequiredCoroutineWithQueue(routine);
+        }
+    }
+
+    public void StartRequiredCoroutineWithQueue(IEnumerator routine)
+    {
+        _queue.Enqueue(routine);
+        if (_queue.Count == 1)
+        {
+            StartQueueCycle();
         }
     }
 
@@ -40,7 +45,6 @@ public class CoroutineQueue
         while (_queue.Count > 0)
         {
             var routine = _queue.Peek();
-            Debug.Log(_queue.Count);
             yield return _monoBeh.StartCoroutine(routine);
             _queue.Dequeue();
         }

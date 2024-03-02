@@ -42,7 +42,6 @@ public class BusyPosService
 
     private void RemoveBusyPos(Transform transform)
     {
-        Debug.Log(transform);
         if (_busyPositions.ContainsKey(transform)) _busyPositions.Remove(transform);
     }
 }

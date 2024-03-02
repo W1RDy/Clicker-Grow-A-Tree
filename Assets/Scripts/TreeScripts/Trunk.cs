@@ -26,25 +26,28 @@ public class Trunk : MonoBehaviour, IGrowable
     {
         if (sumHeight >= _maxHeight)
         {
+            //Debug.Log(sumHeight);
+            //Debug.Log(_maxHeight);
             _heighestTrunkPart.Grow(1);
             AddNewTrunkPart();
         }
         else
         {
+            //Debug.Log((sumHeight / _heighestTrunkPart.Height) % 1);
             _heighestTrunkPart.Grow((sumHeight / _heighestTrunkPart.Height) % 1);
         }
     }
 
     private void AddNewTrunkPart()
     {
-        var spawnHeight = _maxHeight == 0 ? 0 : _maxHeight + _trunkPartPrefab.Height / 2;
+        var spawnHeight = _maxHeight == 0 ? 0 : _maxHeight  + _trunkPartPrefab.Height;
         _heighestTrunkPart = Instantiate(_trunkPartPrefab, Vector2.zero, Quaternion.identity);
         if (_topFilledGrowable == null) _topFilledGrowable = _heighestTrunkPart;
         _heighestTrunkPart.transform.SetParent(transform);
         _heighestTrunkPart.transform.localPosition = new Vector2(0, spawnHeight);
         _heighestTrunkPart.InitializeTrunk(_trunkPartCallback, _coroutineQueue, _endCoroutineCallback);
 
-        _maxHeight = _heighestTrunkPart.transform.localPosition.y + _heighestTrunkPart.Height;
+        _maxHeight = _maxHeight + _heighestTrunkPart.Height;
     }
 
     public Vector2 GetFilledTopLocalPoint()

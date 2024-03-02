@@ -12,10 +12,14 @@ public class AnimationsInitializer : MonoBehaviour
     [SerializeField] private Button _upgradeWindowButton;
 
     [Header("UpgradeButtonAnimationComponents")]
-    [SerializeField] private Button _upgradeButton;
+    [SerializeField] private Button _upgradeButtonMobile;
+    [SerializeField] private Button _upgradeButtonPC;
+    private Button _upgradeButton;
 
     public IAnimation[] InitializeAnimations()
     {
+        _upgradeButton = Screen.height < Screen.width ? _upgradeButtonPC : _upgradeButtonMobile;
+
         return new IAnimation[3]
         {
             new TouchAnimation(_touchAnimMaskTransform, _touchAnimCircleTransform, _touchAnimationView),

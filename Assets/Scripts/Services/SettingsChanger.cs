@@ -44,16 +44,11 @@ public class SettingsChanger : IService
     {
         for (int i = 0; i < _growSettings.BranchingValue + 1; i++)
         {
-            Debug.Log((int)Mathf.Round((1f / (_growSettings.BranchingValue + 1)) * 100));
             _coinsSpawnSettings.SpawnChances[i].spawnChance = (int)Mathf.Round((1f / (_growSettings.BranchingValue + 1)) * 100);
         }
 
         var branchesCount = _growSettings.BranchesCount * _growSettings.BranchingValue;
-        Debug.Log(_growSettings.UpgradeProgress);
         var suggestCoinsCount = (int)Mathf.Floor(Mathf.Lerp(1, _coinsSpawnSettings.MaxCoins, _growSettings.UpgradeProgress));
         _coinsSpawnSettings.CoinsCount = Mathf.Clamp(suggestCoinsCount, 1, branchesCount + 1);
-
-        Debug.Log(_coinsSpawnSettings.SpawnChances[0].spawnChance);
-        Debug.Log(_coinsSpawnSettings.CoinsCount);
     }
 }
