@@ -6,15 +6,16 @@ public class UpgradePathsController : MonoBehaviour, IService
     [SerializeField] private UpgradePath[] _upgradePathsMobile;
     [SerializeField] private UpgradePath[] _upgradePathsPC;
     [SerializeField] private UpgradeConfig[] _upgradeConfigs;
+    private UpgradePath[] _upgradePaths; 
     private GrowSettings _growSettings;
     private bool _allPathsActivated;
 
     public void InitializeUpgradePaths(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
     {
         _growSettings = growSettings;
-        UpgradePath[] upgradePaths = Screen.height < Screen.width ? _upgradePathsPC : _upgradePathsMobile;
+        _upgradePaths = Screen.height < Screen.width ? _upgradePathsPC : _upgradePathsMobile;
 
-        foreach (var upgradePath in upgradePaths)
+        foreach (var upgradePath in _upgradePaths)
         {
             var upgradeConfig = FindUpgradeConfig(upgradePath.UpgradeType);
             upgradePath.InitializeUpgradePath(growSettings, coinsSpawnSettings, upgradeConfig);
@@ -32,7 +33,7 @@ public class UpgradePathsController : MonoBehaviour, IService
 
     public void ActivateUpgradePath(UpgradeType upgradeType)
     {
-        foreach (var upgradePath in _upgradePathsMobile)
+        foreach (var upgradePath in _upgradePaths)
         {
             if (upgradePath.UpgradeType == upgradeType)
             {

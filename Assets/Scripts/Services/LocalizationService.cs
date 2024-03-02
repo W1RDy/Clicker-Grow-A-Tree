@@ -26,18 +26,14 @@ public class LocalizationService : IService
     private void GetLocalizationLanguage()
     {
         _languageIndex = InteractorWithBrowser.GetLanguage();
-        Debug.Log(_languageIndex);
     }
 
     public string GetPhrase(string index)
     {
-        Debug.Log(_languageIndex);
         if (_languageIndex == "" || _languageIndex == null)
         {
             GetLocalizationLanguage();
         }
-        Debug.Log(_languageIndex);
-
         var phrase = _phrases[index];
         switch (_languageIndex)
         {

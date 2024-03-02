@@ -8,7 +8,8 @@ mergeInto(LibraryManager.library, {
     ysdk.adv.showFullscreenAdv({
       callbacks: {
         onClose: function(wasShown) {
-          myGameInstance.SendMessage('BrowserRequestHandler', 'SetAudioSettings', 'true');
+          myGameInstance.SendMessage('BrowserRequestHandler', 'ContinueMusic');
+          myGameInstance.SendMessage('BrowserRequestHandler', 'StartShowingADV')
         },
         onError: function(error) {
           // some action on error
@@ -31,7 +32,7 @@ mergeInto(LibraryManager.library, {
         },
         onClose: function(){
           console.log('Video ad closed.');
-          myGameInstance.SendMessage('BrowserRequestHandler', 'SetAudioSettings', 'true');
+          myGameInstance.SendMessage('BrowserRequestHandler', 'ContinueMusic');
           }
         }, 
         onError: function(e){

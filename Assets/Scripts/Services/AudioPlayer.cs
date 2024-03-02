@@ -42,6 +42,14 @@ public class AudioPlayer : MonoBehaviour, IService
         }
     }
 
+    public void ContinueMusic()
+    {
+        if (_isAudio && !_audioSource.isPlaying)
+        {
+            _audioSource.Play();
+        }
+    }
+
     public void PlaySounds(string index)
     {
         if (_isAudio)
