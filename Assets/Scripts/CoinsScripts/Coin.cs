@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Coin : MonoBehaviourWithDestroyableByCamera
 {
+    public int Index { get; set; }
     private CoinsSpawnSettings _settings;
     private IGrowable _growable;
     private CoinsCounter _coinsCounter;
@@ -27,7 +28,6 @@ public class Coin : MonoBehaviourWithDestroyableByCamera
             _growable = growable.GetRelativeGrowable();
             _positionInGrowableCoord = _growable.GetGrowableTransform().InverseTransformPoint(transform.position);
         }
-        //Debug.Log(_growable.GetGrowableTransform());
     }
 
     public void Update()

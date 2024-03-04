@@ -23,6 +23,14 @@ public class GrowSettings : ScriptableObject
     public int MaxBranchesCount => _maxBranchesCount;
     public int MaxBranchingValue => _maxBranchingValue;
 
+    public void SetSettings(GrowSaveConfig config)
+    {
+        _trunkGrowSpeed = config.TrunkGrowSpeed;
+        _branchesCount = config.BranchesCount;
+        _branchesGrowSpeed = config.BranchesGrowSpeed;
+        _branchingValue = config.BranchingValue;
+    }
+
     public float TrunkGrowSpeed
     {
         get => _trunkGrowSpeed;

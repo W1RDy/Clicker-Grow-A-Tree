@@ -11,7 +11,9 @@ public class Tree : MonoBehaviour, IService, IGrowable
 
     private float _height = 0;
     private float _trunkHeight;
+    private SaveService _saveService;
     public GrowSettings GrowSettings {get; private set;}
+    private Action SaveData;
 
     public void SetGrowSettings(GrowSettings growSettings)
     {
@@ -21,8 +23,17 @@ public class Tree : MonoBehaviour, IService, IGrowable
     public void InitializeTree(Action<Transform> relativeObjCallback)
     {
         _coroutineQueue = new CoroutineQueue(this, 12);
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
         _trunk.InitializeTrunk(_trunkPartPrefab, relativeObjCallback, _coroutineQueue);
         _trunkHeight = _trunkPartPrefab.transform.GetChild(0).localScale.y * _trunkPartPrefab.GetComponentInChildren<SpriteRenderer>().sprite.bounds.size.y;
+
+        SaveData = () =>
+        {
+            _saveService.SaveTrunk(GetRelativeGrowable() as TrunkPart);
+            _saveService.SaveDataOnQuit -= SaveData;
+        };
+
+        _saveService.SaveDataOnQuit += SaveData;
     }
 
     public void Grow(float growValue)

@@ -10,6 +10,14 @@ public class CoinsSpawnSettings : ScriptableObject
     [SerializeField] private int _coinsCosts;
     [SerializeField] private int _maxCosts;
 
+    public void SetSettings(CoinsSaveSettingsConfig _saveSettings)
+    {
+        _spawnChances = _saveSettings.SpawnChances;
+        _coinsCosts = _saveSettings.CoinsCosts;
+        _distanceChangeIntensity = _saveSettings.DistanceChangeIntensity;
+        _coinsCount = _saveSettings.CoinsCount;
+    }
+
     public SpawnChances[] SpawnChances => _spawnChances;
     public int MaxCoins => _maxCoins;
     public int CoinsCount

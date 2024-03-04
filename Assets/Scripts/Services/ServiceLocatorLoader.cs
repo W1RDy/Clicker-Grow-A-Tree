@@ -34,16 +34,19 @@ public class ServiceLocatorLoader : MonoBehaviour
     [SerializeField] private ADVService _advService;
     [SerializeField] private TutorialController _tutorController;
 
+    [SerializeField] private SaveService _saveService;
+
     private void Awake()
     {
+        _localizationDataInstance = Instantiate(_localizationData);
         _growSettingsInstance = Instantiate(_growSettings);
         _coinsSpawnSettingsInstance = Instantiate(_coinsSpawnSettings);
-        _localizationDataInstance = Instantiate(_localizationData);
         Bind();
     }
 
     private void Bind()
     {
+        BindSaveService();
         BindMonoBehaviours();
         BindServices();
     }
@@ -86,6 +89,14 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindSettingsChanger();
         BindButtonService();
         BindTouchHandler();
+    }
+
+    private void BindSaveService()
+    {
+        ServiceLocator.Instance.Register(_saveService);
+        _saveService.LoadData(_growSettings, _coinsSpawnSettings);
+        _growSettingsInstance.SetSettings(_saveService.DataContainer.GrowConfig);
+        _coinsSpawnSettingsInstance.SetSettings(_saveService.DataContainer.CoinsSpawnConfig);
     }
 
     private void BindTutorialController()

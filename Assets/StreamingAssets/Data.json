@@ -1,0 +1,273 @@
+﻿{
+  "BranchConfigs": [
+    {
+      "Index": 0,
+      "Position": {
+        "x": 0.18,
+        "y": -0.4057274,
+        "z": 0.0,
+        "normalized": {
+          "x": 0.405530185,
+          "y": -0.914081633,
+          "z": 0.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 0.99999994
+        },
+        "magnitude": 0.4438634,
+        "sqrMagnitude": 0.197014719
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -0.461581916,
+        "w": 0.887097657,
+        "eulerAngles": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 305.021545,
+          "normalized": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0,
+            "magnitude": 1.0,
+            "sqrMagnitude": 1.0
+          },
+          "magnitude": 305.021545,
+          "sqrMagnitude": 93038.14
+        }
+      },
+      "FillValue": 0.0
+    },
+    {
+      "Index": 1,
+      "Position": {
+        "x": -0.18,
+        "y": -0.7948904,
+        "z": 0.0,
+        "normalized": {
+          "x": -0.220854625,
+          "y": -0.975306749,
+          "z": 0.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 0.8150158,
+        "sqrMagnitude": 0.664250731
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.6560933,
+        "w": 0.754679859,
+        "eulerAngles": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 82.0051956,
+          "normalized": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0,
+            "magnitude": 1.0,
+            "sqrMagnitude": 1.0
+          },
+          "magnitude": 82.0051956,
+          "sqrMagnitude": 6724.852
+        }
+      },
+      "FillValue": 0.0
+    },
+    {
+      "Index": 2,
+      "Position": {
+        "x": 0.18,
+        "y": 1.03733683,
+        "z": 0.0,
+        "normalized": {
+          "x": 0.170966491,
+          "y": 0.9852768,
+          "z": 0.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 0.99999994
+        },
+        "magnitude": 1.052838,
+        "sqrMagnitude": 1.1084677
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -0.4181607,
+        "w": 0.9083731,
+        "eulerAngles": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 310.562958,
+          "normalized": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0,
+            "magnitude": 1.0,
+            "sqrMagnitude": 1.0
+          },
+          "magnitude": 310.562958,
+          "sqrMagnitude": 96449.35
+        }
+      },
+      "FillValue": 0.0
+    },
+    {
+      "Index": 3,
+      "Position": {
+        "x": -0.18,
+        "y": 0.619305134,
+        "z": 0.0,
+        "normalized": {
+          "x": -0.27909866,
+          "y": 0.9602624,
+          "z": 0.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 0.6449332,
+        "sqrMagnitude": 0.415938854
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.5505072,
+        "w": 0.834830463,
+        "eulerAngles": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 66.80363,
+          "normalized": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0,
+            "magnitude": 1.0,
+            "sqrMagnitude": 1.0
+          },
+          "magnitude": 66.80363,
+          "sqrMagnitude": 4462.72461
+        }
+      },
+      "FillValue": 0.0
+    }
+  ],
+  "TrunkConfig": {
+    "Position": {
+      "x": 0.0,
+      "y": -3.0,
+      "z": 0.0,
+      "normalized": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 3.0,
+      "sqrMagnitude": 9.0
+    },
+    "FillValue": 0.0
+  },
+  "CoinsSaveConfigs": [
+    {
+      "Position": {
+        "x": 0.7877535,
+        "y": 1.5575633,
+        "z": 0.0,
+        "normalized": {
+          "x": 0.451321,
+          "y": 0.892361641,
+          "z": 0.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 0.99999994
+        },
+        "magnitude": 1.74543953,
+        "sqrMagnitude": 3.046559
+      }
+    },
+    {
+      "Position": {
+        "x": -0.972224653,
+        "y": -0.6836238,
+        "z": 0.0,
+        "normalized": {
+          "x": -0.8180179,
+          "y": -0.5751927,
+          "z": 0.0,
+          "normalized": {
+            "x": -0.81801796,
+            "y": -0.57519275,
+            "z": 0.0,
+            "magnitude": 1.0,
+            "sqrMagnitude": 1.00000012
+          },
+          "magnitude": 0.99999994,
+          "sqrMagnitude": 0.99999994
+        },
+        "magnitude": 1.18851268,
+        "sqrMagnitude": 1.41256225
+      }
+    },
+    {
+      "Position": {
+        "x": 0.0,
+        "y": -1.171191,
+        "z": 0.0,
+        "normalized": {
+          "x": 0.0,
+          "y": -1.0,
+          "z": 0.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 1.171191,
+        "sqrMagnitude": 1.37168825
+      }
+    },
+    {
+      "Position": {
+        "x": 0.0,
+        "y": 1.58303642,
+        "z": 0.0,
+        "normalized": {
+          "x": 0.0,
+          "y": 1.0,
+          "z": 0.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 1.58303642,
+        "sqrMagnitude": 2.50600433
+      }
+    }
+  ],
+  "GrowConfig": {
+    "TrunkGrowSpeed": 0.07,
+    "BranchesGrowSpeed": 0.04,
+    "BranchesCount": 4,
+    "BranchingValue": 1
+  },
+  "CoinsSpawnConfig": {
+    "SpawnChances": [
+      {
+        "level": 0,
+        "spawnChance": 50
+      },
+      {
+        "level": 1,
+        "spawnChance": 50
+      },
+      {
+        "level": 2,
+        "spawnChance": 0
+      }
+    ],
+    "CoinsCount": 3,
+    "DistanceChangeIntensity": 4.0,
+    "CoinsCosts": 80
+  },
+  "name": "DataContainer",
+  "hideFlags": 0
+}

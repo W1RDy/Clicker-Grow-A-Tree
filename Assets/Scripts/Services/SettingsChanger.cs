@@ -1,14 +1,28 @@
+using System;
 using UnityEngine;
 
 public class SettingsChanger : IService
 {
     private GrowSettings _growSettings;
     private CoinsSpawnSettings _coinsSpawnSettings;
+    private SaveService _saveService;
+
+    private Action SaveData;
 
     public SettingsChanger(GrowSettings settings, CoinsSpawnSettings coinsSpawnSettings)
     {
         _growSettings = settings;
         _coinsSpawnSettings = coinsSpawnSettings;
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
+
+        SaveData = () =>
+        {
+            _saveService.SaveGrowSettings(_growSettings);
+            _saveService.SaveCoinsSettings(_coinsSpawnSettings);
+            _saveService.SaveDataOnQuit -= SaveData;
+        };
+
+        _saveService.SaveDataOnQuit += SaveData;
     }
 
     public void ChangeGrowTrunkSpeed(float value)

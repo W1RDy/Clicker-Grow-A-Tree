@@ -9,21 +9,29 @@ public class GrowablesService : IService
     private Action<int, Branch[]> AddNewBranches;
     private Action<int, Branch> RemoveOddBranches;
     private GameController _gameController;
+    private IndexDistributor _indexDistributor;
 
     private Dictionary<int, List<Branch>> _branches = new Dictionary<int, List<Branch>>();
+
+    private SaveService _saveService;
+
+    private Action SaveData;
 
     public GrowablesService()
     {
         _tree = ServiceLocator.Instance.Get<Tree>();
         _gameController = ServiceLocator.Instance.Get<GameController>();
         _gameController.FinishGame += OnFinishGame;
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
+
+        _indexDistributor = new IndexDistributor();
 
         RemoveOddBranches = (branchLevel, branch) =>
         {
             branch.Destory -= RemoveOddBranches;
+            _indexDistributor.AddFreeIndex(branch.Index);
             _branches[branchLevel].Remove(branch);
         };
-
 
         AddNewBranches = (branchLevel, branches) =>
         {
@@ -36,9 +44,18 @@ public class GrowablesService : IService
             foreach (var branch in branches)
             {
                 branch.Destory += RemoveOddBranches;
+                branch.Index = _indexDistributor.GetFreeIndex();
                 branchesList.Add(branch);
             }
         };
+
+        SaveData = () =>
+        {
+            _saveService.SaveBranchesInContainer(GetBranches());
+            _saveService.SaveDataOnQuit -= SaveData;
+        };
+
+        _saveService.SaveDataOnQuit += SaveData;
     }
 
     public void InitializeService(FactoriesController factoriesController)
@@ -97,5 +114,3 @@ public class GrowablesService : IService
 
     public int GetBranchingValue() => _branches.Count;
 }
-
-

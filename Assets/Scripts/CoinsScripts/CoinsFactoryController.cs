@@ -12,16 +12,33 @@ public class CoinsFactoryController
     private bool _isFirstSpawn;
     private float _spawnDistance = 2f;
 
+    private SaveService _saveService;
+    private CoinService _coinService;
+
+    private Action SaveData;
+
     public CoinsFactoryController(CoinsSpawnSettings coinsSpawnSettings, GrowSettings growSettings)
     {
         _growSettings = growSettings;
         _coinsSpawnSettings = coinsSpawnSettings;
         _growablesService = ServiceLocator.Instance.Get<GrowablesService>();
+        _coinService = new CoinService();
+
         var container = new GameObject("Coins").transform;
         _coinsFactory = new CoinsFactory(container);
         _coinsFactory.LoadResources();
         _busyPosService = new BusyPosService();
         _isFirstSpawn = true;
+
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
+
+        SaveData = () =>
+        {
+            _saveService.SaveCoins(_coinService.GetCoins());
+            _saveService.SaveDataOnQuit -= SaveData;
+        };
+
+        _saveService.SaveDataOnQuit += SaveData;
     }
 
     public void SpawnCoins(Transform relativeObj)
@@ -64,6 +81,15 @@ public class CoinsFactoryController
         }
         var coin = _coinsFactory.Create(position, Quaternion.identity, null) as Coin;
         coin.Initialize(growable, _coinsSpawnSettings);
+
+        Action<Transform> DestroyCallback = transform =>
+        {
+            var coin = transform.GetComponent<Coin>();
+            _coinService.RemoveCoin(coin);
+        };
+
+        coin.Destroying += DestroyCallback;
+        _coinService.AddCoin(coin);
     }
 
     private Vector2 GetRandomPosition(IGrowable growable, float minPoint, float maxPoint)

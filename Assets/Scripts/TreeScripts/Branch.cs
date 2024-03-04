@@ -6,6 +6,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
 {
+    public int Index { get; set; }
     private const string AppearValue = "_Fill";
     private int _branchLevel;
     private Material _material;
@@ -16,6 +17,9 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
     public event Action<int, Branch> Destory;
     private Action<float> LerpChangerCallback;
 
+    private SaveService _saveService;
+    private Action SaveData;
+
     public void InitializeBranch(Transform relativeObj, int branchLevel)
     {
         var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -25,11 +29,22 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
         _material = spriteRenderer.material;
         Height = transform.GetChild(0).localScale.y * spriteRenderer.sprite.bounds.size.y;
 
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
+
         LerpChangerCallback = value =>
         {
             _currentGrowValue = value;
             _material.SetFloat(AppearValue, _currentGrowValue);
+            
         };
+
+        SaveData = () =>
+        {
+            _saveService.SaveGrowableValue(this);
+            _saveService.SaveDataOnQuit -= SaveData;
+        };
+
+        _saveService.SaveDataOnQuit += SaveData;
     }
 
     public void Grow(float growValue)
@@ -64,6 +79,7 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
     public override void OnDestroy()
     {
         Destory?.Invoke(_branchLevel, this);
+        _saveService.SaveDataOnQuit -= SaveData;
         base.OnDestroy();
     }
 
