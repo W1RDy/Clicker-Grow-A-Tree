@@ -15,23 +15,52 @@ public class SaveService : MonoBehaviour, IService
 
     public DataContainer DataContainer => _dataContainer;
     public event Action SaveDataOnQuit;
+    public event Action QuitApplication;
+    private string _json;
+    private bool _dataSetted;
+    public bool IsLoaded { get; private set; }
 
     public void LoadData(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
     {
-        var json = InteractorWithBrowser.LoadData();
-        if (json != null && json != "")
+        Debug.Log("Bind");
+        StartCoroutine(WaitWhileInit(growSettings, coinsSpawnSettings));
+    }
+
+    public void SetData(string json)
+    {
+        _json = json;
+        _dataSetted = true;
+    }
+
+    private void LoadDataAfterWaiting(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
+    {
+        Debug.Log(_json);
+        if (_json != null && _json != "")
         {
-            JsonUtility.FromJsonOverwrite(json, _dataContainer);
+            JsonUtility.FromJsonOverwrite(_json, _dataContainer);
+            //_dataContainer = JsonUtility.FromJson<DataContainer>(_json);
             _dataContainer.IsDefaultData = false;
         }
         else _dataContainer.SetDefaultSettings(growSettings, coinsSpawnSettings);
+        IsLoaded = true;
+        Debug.Log("DataIsLoaded");
+    }
+
+    private IEnumerator WaitWhileInit(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
+    {
+        yield return new WaitUntil(() => InteractorWithBrowser.PlayerIsInitialized());
+        InteractorWithBrowser.LoadData();
+        yield return new WaitUntil(() => _dataSetted);
+        Debug.Log("EndWaiting");
+        LoadDataAfterWaiting(growSettings, coinsSpawnSettings);
     }
 
     public void SaveData()
     {
-        var json = JsonConvert.SerializeObject(_dataContainer, Formatting.Indented,
-    new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        var json = JsonConvert.SerializeObject(_dataContainer, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        //var json = JsonUtility.ToJson(_dataContainer);
         InteractorWithBrowser.SaveData(json);
+
         Debug.Log("SaveDataToJSON");
     }
 
@@ -117,9 +146,20 @@ public class SaveService : MonoBehaviour, IService
         Debug.Log("SaveCameraPos");
     }
 
-    public void OnApplicationQuit()
+    public void SaveUpgradePaths(List<UpgradePathSaveConfig> saveConfigs)
+    {
+        _dataContainer.UpgradePathSaveConfigs = saveConfigs;
+        Debug.Log("SaveUpgradePaths");
+    }
+
+    public void SaveAllData()
     {
         SaveDataOnQuit?.Invoke();
         SaveData();
+    }
+
+    public void OnDestroy()
+    {
+        QuitApplication?.Invoke();
     }
 }

@@ -18,9 +18,17 @@ public class ADVService : MonoBehaviour, IService
 
     private void Start()
     {
-        _ADVWarning = GetComponent<ADVWarning>();
-        _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
-        StartADVShowing();
+        StartCoroutine(WaitWhileRegistered());
+    }
+
+    private IEnumerator WaitWhileRegistered()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
+        {
+            _ADVWarning = GetComponent<ADVWarning>();
+            _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
+            StartADVShowing();
+        }
     }
 
     public void ActivateADVForReward(float rewardValue)

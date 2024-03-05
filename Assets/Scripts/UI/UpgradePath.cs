@@ -18,16 +18,18 @@ public class UpgradePath : MonoBehaviour
     private CoinsSpawnSettings _coinsSpawnSettings;
 
     [SerializeField] private bool _isActivated;
+    private SaveService _saveService;
 
-    public void InitializeUpgradePath(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings, UpgradeConfig upgradeConfig)
+    public void InitializeUpgradePath(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings, UpgradeConfig upgradeConfig, UpgradePathSaveConfig upgradePathSaveConfig)
     {
         _growSettings = growSettings;
         _coinsSpawnSettings = coinsSpawnSettings;
         _upgradeConfig = upgradeConfig;
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
 
-        _upgradeValue = upgradeConfig.UpgradeValues[0];
-        _upgradeCost = upgradeConfig.UpgradeCosts[0];
-        _upgradeCount = 0;
+        _upgradeValue = upgradePathSaveConfig.UpgradeValue;
+        _upgradeCost = upgradePathSaveConfig.UpgradeCost;
+        _upgradeCount = upgradePathSaveConfig.UpgradeCount;
 
         _indicatorsController = GetComponent<UpgradePathIndicatorsController>();
         _pathView = GetComponent<UpgradePathView>();
@@ -74,6 +76,8 @@ public class UpgradePath : MonoBehaviour
         _indicatorsController.UpdateIndicators(_upgradeValue, parameters.currentParameter);
 
         if (parameters.currentParameter >= parameters.maxParameter) DeactivateUpgradePath();
+
+        _saveService.SaveAllData();
     }
 
     public void ActivateUpgradePath()
@@ -92,6 +96,11 @@ public class UpgradePath : MonoBehaviour
             _isActivated = false;
             _pathView.DeactivatePath();
         }
+    }
+
+    public UpgradePathSaveConfig GetSaveConfig()
+    {
+        return new UpgradePathSaveConfig(_upgradeType, _upgradeValue, _upgradeCost, _upgradeCount);
     }
 
     private (float currentParameter, float maxParameter) GetParameters(UpgradeType upgradeType)

@@ -16,6 +16,7 @@ public class GrowablesService : IService
     private SaveService _saveService;
 
     private Action SaveData;
+    private Action Unsubscribe;
 
     public GrowablesService()
     {
@@ -52,8 +53,15 @@ public class GrowablesService : IService
         SaveData = () =>
         {
             _saveService.SaveBranchesInContainer(GetBranches());
-            _saveService.SaveDataOnQuit -= SaveData;
         };
+
+        Unsubscribe = () =>
+        {
+            _saveService.SaveDataOnQuit -= SaveData;
+            _saveService.QuitApplication -= Unsubscribe;
+        };
+
+        _saveService.QuitApplication += Unsubscribe;
 
         _saveService.SaveDataOnQuit += SaveData;
     }

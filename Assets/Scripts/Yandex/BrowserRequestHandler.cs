@@ -10,9 +10,17 @@ public class BrowserRequestHandler : MonoBehaviour
 
     private void Start()
     {
-        _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
-        _buttonService = ServiceLocator.Instance.Get<ButtonService>();
-        _advService = ServiceLocator.Instance.Get<ADVService>();
+        StartCoroutine(WaitWhileRegistered());
+    }
+
+    private IEnumerator WaitWhileRegistered()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
+        {
+            _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
+            _buttonService = ServiceLocator.Instance.Get<ButtonService>();
+            _advService = ServiceLocator.Instance.Get<ADVService>();
+        }
     }
 
     public void ContinueMusic()

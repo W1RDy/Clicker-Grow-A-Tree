@@ -55,13 +55,30 @@ mergeInto(LibraryManager.library, {
     return buffer;
   },
 
-  PlayerIsInitialized: function()
+  PlayerIsInitializedExtern: function()
   {
     var isInitialized = String(player != undefined);
     var bufferSize = lengthBytesUTF8(isInitialized) + 1;
     var buffer = _malloc(bufferSize);
     stringToUTF8(isInitialized, buffer, bufferSize);
     return buffer;
+  },
+
+  SaveDataExtern: function (data){
+    console.log("SaveExtern")
+    var dataString = UTF8ToString(data);
+    var myObj = JSON.parse(dataString); 
+    player.setData(myObj);
+  },
+
+  LoadDataExtern: function (){
+      console.log('Load data');
+      console.log(player);
+      console.log(lb)
+      player.getData().then(function(_data ){
+            const myJSON = JSON.stringify(_data);
+            myGameInstance.SendMessage('SaveService', 'SetData', myJSON);
+      });
   },
 
 });

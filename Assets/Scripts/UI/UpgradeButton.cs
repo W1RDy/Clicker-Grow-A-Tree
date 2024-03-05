@@ -19,6 +19,12 @@ public class UpgradeButton : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(WaitWhileLoaded());
+    }
+
+    private IEnumerator WaitWhileLoaded()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
         _buttonService = ServiceLocator.Instance.Get<ButtonService>();
     }
 

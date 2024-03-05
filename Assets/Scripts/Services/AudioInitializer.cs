@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class AudioInitializer : MonoBehaviour
 {
@@ -6,7 +7,15 @@ public class AudioInitializer : MonoBehaviour
 
     private void Start()
     {
-        var audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
-        if (_musicIndex != "") audioPlayer.PlayMusic(_musicIndex);
+        StartCoroutine(WaitWhileRegistered());
+    }
+
+    private IEnumerator WaitWhileRegistered()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
+        {
+            var audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
+            if (_musicIndex != "") audioPlayer.PlayMusic(_musicIndex);
+        }
     }
 }

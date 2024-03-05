@@ -41,12 +41,20 @@ public class ServiceLocatorLoader : MonoBehaviour
         _localizationDataInstance = Instantiate(_localizationData);
         _growSettingsInstance = Instantiate(_growSettings);
         _coinsSpawnSettingsInstance = Instantiate(_coinsSpawnSettings);
+        BindSaveService();
+        StartCoroutine(WaitWhileDataLoaded());
+    }
+
+    private IEnumerator WaitWhileDataLoaded()
+    {
+        yield return new WaitUntil(() => _saveService.IsLoaded);
+        _growSettingsInstance.SetSettings(_saveService.DataContainer.GrowConfig);
+        _coinsSpawnSettingsInstance.SetSettings(_saveService.DataContainer.CoinsSpawnConfig);
         Bind();
     }
 
     private void Bind()
     {
-        BindSaveService();
         BindMonoBehaviours();
         BindServices();
     }
@@ -89,14 +97,15 @@ public class ServiceLocatorLoader : MonoBehaviour
         BindSettingsChanger();
         BindButtonService();
         BindTouchHandler();
+        Debug.Log("ServiceLocator registered");
+        ServiceLocator.Instance.IsRegistered = true;
     }
 
     private void BindSaveService()
     {
         ServiceLocator.Instance.Register(_saveService);
+        Debug.Log("BindSaveService");
         _saveService.LoadData(_growSettings, _coinsSpawnSettings);
-        _growSettingsInstance.SetSettings(_saveService.DataContainer.GrowConfig);
-        _coinsSpawnSettingsInstance.SetSettings(_saveService.DataContainer.CoinsSpawnConfig);
     }
 
     private void BindTutorialController()
@@ -201,6 +210,7 @@ public class ServiceLocatorLoader : MonoBehaviour
 
     private void BindButtonService()
     {
+        _buttonService.Initialize();
         ServiceLocator.Instance.Register(_buttonService);
     }
 

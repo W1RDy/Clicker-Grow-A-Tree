@@ -17,10 +17,7 @@ public class GameController : MonoBehaviour, IService
         _camera = ServiceLocator.Instance.Get<CustomCamera>();
         _tutorialController = ServiceLocator.Instance.Get<TutorialController>();
         _saveService = ServiceLocator.Instance.Get<SaveService>();
-    }
 
-    private void Start()
-    {
         if (_saveService.DataContainer.IsDefaultData)
         {
             _tutorialController.ActivateTutorial();
@@ -29,8 +26,11 @@ public class GameController : MonoBehaviour, IService
 
     private void Update()
     {
-        if (!_camera.IsMoving() && _tree.GetFilledTopGlobalPoint().y > 0)
-            _camera.ActivateMovement();
+        if (_camera != null)
+        {
+            if (!_camera.IsMoving() && _tree.GetFilledTopGlobalPoint().y > 0)
+                _camera.ActivateMovement();
+        }
     }
 
     private void OnDestroy()

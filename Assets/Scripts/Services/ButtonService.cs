@@ -13,7 +13,7 @@ public class ButtonService : MonoBehaviour, IService
     private Action RewardCollected;
     private ADVService _advService;
 
-    private void Start()
+    public void Initialize()
     {
         _settigsChanger = ServiceLocator.Instance.Get<SettingsChanger>();
         _windowActivator = ServiceLocator.Instance.Get<WindowActivator>();

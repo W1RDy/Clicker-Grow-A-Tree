@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public abstract class MonoBehaviourWithDestroyableByCamera : MonoBehaviour
@@ -8,8 +9,16 @@ public abstract class MonoBehaviourWithDestroyableByCamera : MonoBehaviour
 
     private void Start()
     {
-        _objectsDestoyer = ServiceLocator.Instance.Get<ObjectsDestoyer>();
-        _objectsDestoyer.AddDestroyable(gameObject);
+        StartCoroutine(WaitWhileRegistered());
+    }
+
+    private IEnumerator WaitWhileRegistered()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
+        {
+            _objectsDestoyer = ServiceLocator.Instance.Get<ObjectsDestoyer>();
+            _objectsDestoyer.AddDestroyable(gameObject);
+        }
     }
 
     public virtual void OnDestroy()

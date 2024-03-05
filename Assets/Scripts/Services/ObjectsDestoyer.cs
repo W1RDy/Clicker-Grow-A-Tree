@@ -9,7 +9,15 @@ public class ObjectsDestoyer : MonoBehaviour, IService
 
     private void Start()
     {
-        _customCamera = ServiceLocator.Instance.Get<CustomCamera>();   
+        StartCoroutine(WaitWhileRegistered());
+    }
+
+    private IEnumerator WaitWhileRegistered()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
+        {
+            _customCamera = ServiceLocator.Instance.Get<CustomCamera>();
+        }
     }
 
     public void AddDestroyable(GameObject destroyable)

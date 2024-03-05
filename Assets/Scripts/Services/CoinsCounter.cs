@@ -9,6 +9,7 @@ public class CoinsCounter : IService
     private CoinsIndicator _indicator;
     private SaveService _saveService;
     private Action SaveData;
+    private Action Unsubscribe;
 
     public CoinsCounter(CoinsIndicator indicator)
     {
@@ -20,8 +21,15 @@ public class CoinsCounter : IService
         SaveData = () =>
         {
             _saveService.SaveCoins(Coins);
-            _saveService.SaveDataOnQuit -= SaveData;
         };
+
+        Unsubscribe = () =>
+        {
+            _saveService.SaveDataOnQuit -= SaveData;
+            _saveService.QuitApplication -= Unsubscribe;
+        };
+
+        _saveService.QuitApplication += Unsubscribe;
 
         _saveService.SaveDataOnQuit += SaveData;
     }
@@ -30,6 +38,7 @@ public class CoinsCounter : IService
     {
         Coins += coins;
         _indicator.SetCoins(Coins);
+        _saveService.SaveAllData();
     }
 
     public void RemoveCoins(int coins)

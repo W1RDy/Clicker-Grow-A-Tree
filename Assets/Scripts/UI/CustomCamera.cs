@@ -26,15 +26,24 @@ public class CustomCamera : MonoBehaviour, IService
 
     private void Start()
     {
+        StartCoroutine(WaitWhileLoaded());
+    }
+
+    private IEnumerator WaitWhileLoaded()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
         var posY = Mathf.Clamp(_tree.GetMaxTopPoint().y + heightOffset, 0, float.MaxValue);
         transform.position = new Vector3(0, posY, -10);
     }
 
     private void Update()
     {
-        _speed = _defaultSpeed * 1 / Mathf.Clamp(1 - _growSettings.TrunkGrowSpeed, 0, _growSettings.MaxTrunkGrowSpeed);
-        _moveController.SetSpeed(_speed);
-        _moveController.Move(new Vector2(0, _tree.GetFilledTopGlobalPoint().y + heightOffset));
+        if (_growSettings != null)
+        {
+            _speed = _defaultSpeed * 1 / Mathf.Clamp(1 - _growSettings.TrunkGrowSpeed, 0, _growSettings.MaxTrunkGrowSpeed);
+            _moveController.SetSpeed(_speed);
+            _moveController.Move(new Vector2(0, _tree.GetFilledTopGlobalPoint().y + heightOffset));
+        }
     }
 
     public void ActivateMovement()

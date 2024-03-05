@@ -7,7 +7,7 @@ public class AudioPlayer : MonoBehaviour, IService
     private AudioSource _audioSource;
     private bool _isAudio = true;
 
-    private void Awake()
+    private void Start()
     {
         DontDestroyOnLoad(gameObject);
         _audioService = ServiceLocator.Instance.Get<AudioService>();

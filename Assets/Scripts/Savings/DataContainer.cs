@@ -15,6 +15,7 @@ public class DataContainer : ScriptableObject
     [SerializeField] private int _score;
     [SerializeField] private int _coins;
     [SerializeField] private Vector3 _cameraPos;
+    [SerializeField] private List<UpgradePathSaveConfig> _upgradePathSaveConfigs = new List<UpgradePathSaveConfig>();
 
     public List<BranchSaveConfig> BranchConfigs { get => _branchConfigs; set => _branchConfigs = value; }
     public List<TrunkSaveConfig> TrunkSaveConfig { get => _trunkSaveConfig; set => _trunkSaveConfig = value; }
@@ -26,8 +27,14 @@ public class DataContainer : ScriptableObject
     public int Score { get => _score; set => _score = value; }
     public int Coins { get => _coins; set => _coins = value; }
     public Vector3 CameraPos { get => _cameraPos; set => _cameraPos = value; }
+    public List<UpgradePathSaveConfig> UpgradePathSaveConfigs { get => _upgradePathSaveConfigs; set => _upgradePathSaveConfigs = value; }
 
-    public void SetDefaultSettings(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
+    public DataContainer()
+    {
+
+    }
+
+    public void SetDefaultSettings(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings /*List<UpgradePathSaveConfig> upgradePathSaveConfig*/)
     {
         IsDefaultData = true;
         _trunkSaveConfig = new List<TrunkSaveConfig>(1) { new TrunkSaveConfig(new Vector2(0, -3), 0, 0) };
@@ -37,6 +44,7 @@ public class DataContainer : ScriptableObject
         _score = 0;
         _coins = 0;
         _cameraPos = new Vector3(0, 0, -10);
+        //_upgradePathSaveConfigs = upgradePathSaveConfig;
     }
 }
 
@@ -61,6 +69,11 @@ public class BranchSaveConfig
     public int BranchLevel => _branchLevel;
     public int RelativeIndex => _relativeIndex;
 
+    public BranchSaveConfig()
+    {
+
+    }
+
     public BranchSaveConfig(int index, Vector3 position, float rotation, bool isRight, int branchLevel, int relativeIndex)
     {
         _index = index;
@@ -82,6 +95,11 @@ public class TrunkSaveConfig
     public float FillValue { get => _fillValue; set => _fillValue = value; }
     public int Index => _index;
 
+    public TrunkSaveConfig()
+    {
+
+    }
+
     public TrunkSaveConfig(Vector3 position, float fillValue, int index)
     {
         _position = position;
@@ -96,6 +114,11 @@ public class CoinsSaveConfig
     [SerializeField] private Vector3 _position;
 
     public Vector3 Position => _position;
+
+    public CoinsSaveConfig()
+    {
+
+    }
 
     public CoinsSaveConfig(Vector3 position)
     {
@@ -115,6 +138,11 @@ public class GrowSaveConfig
     public float BranchesGrowSpeed => _branchesGrowSpeed;
     public int BranchesCount => _branchesCount;
     public int BranchingValue => _branchingValue;
+
+    public GrowSaveConfig()
+    {
+
+    }
 
     public GrowSaveConfig(GrowSettings growSettings)
     {
@@ -138,11 +166,43 @@ public class CoinsSaveSettingsConfig
     public float DistanceChangeIntensity => _distanceChangeIntensity;
     public int CoinsCosts => _coinsCosts;
 
+    public CoinsSaveSettingsConfig()
+    {
+
+    }
+
     public CoinsSaveSettingsConfig(CoinsSpawnSettings settings)
     {
         _spawnChances = settings.SpawnChances;
         _coinsCount = settings.CoinsCount;
         _distanceChangeIntensity = settings.DistanceChangeIntensity;
         _coinsCosts = settings.CoinsCosts;
+    }
+}
+
+[Serializable]
+public class UpgradePathSaveConfig
+{
+    [SerializeField] private UpgradeType _upgradeType;
+    [SerializeField] private float _upgradeValue;
+    [SerializeField] private int _upgradeCost;
+    [SerializeField] private int _upgradeCount;
+
+    public UpgradeType UpgradeType { get => _upgradeType; set => _upgradeType = value; }
+    public float UpgradeValue { get => _upgradeValue; set => _upgradeValue = value; }
+    public int UpgradeCost { get => _upgradeCost; set => _upgradeCost = value; }
+    public int UpgradeCount { get => _upgradeCount; set => _upgradeCount = value; }
+
+    public UpgradePathSaveConfig()
+    {
+
+    }
+
+    public UpgradePathSaveConfig(UpgradeType upgradeType, float upgradeValue, int upgradeCost, int upgradeCount)
+    {
+        _upgradeType = upgradeType;
+        _upgradeValue = upgradeValue;
+        _upgradeCost = upgradeCost;
+        _upgradeCount = upgradeCount;
     }
 }

@@ -19,12 +19,13 @@ public static class InteractorWithBrowser
 
     [DllImport("__Internal")]
     private static extern string GetLanguageExtern();
-    [DllImport("__Internal")]
-    private static extern string PlayerIsInitialized();
+
     [DllImport("__Internal")]
     private static extern void SaveDataExtern(string data);
     [DllImport("__Internal")]
-    private static extern string LoadDataExtern();
+    private static extern void LoadDataExtern();
+    [DllImport("__Internal")]
+    private static extern string PlayerIsInitializedExtern();
 
 
     //    public static void Authorize()
@@ -72,17 +73,6 @@ public static class InteractorWithBrowser
 #endif  
     }
 
-    public static bool IsInitialized()
-    {
-#if !UNITY_EDITOR && UNITY_WEBGL
-        var str = PlayerIsInitialized();
-        return System.Convert.ToBoolean(str);
-#endif
-#if UNITY_EDITOR
-        return true;
-#endif  
-    }
-
     public static void SaveData(string data)
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
@@ -93,14 +83,25 @@ public static class InteractorWithBrowser
 #endif
     }
 
-    public static string LoadData()
+    public static void LoadData()
     {
 #if !UNITY_EDITOR && UNITY_WEBGL
-        return LoadDataExtern();
+        LoadDataExtern();
 #endif
 #if UNITY_EDITOR
         var json = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "Data.json"));
-        return json;
+        ServiceLocator.Instance.Get<SaveService>().SetData(json);
+#endif
+    }
+
+    public static bool PlayerIsInitialized()
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        string str = PlayerIsInitializedExtern();
+        return System.Convert.ToBoolean(str);
+#endif
+#if UNITY_EDITOR
+        return true;
 #endif
     }
 }

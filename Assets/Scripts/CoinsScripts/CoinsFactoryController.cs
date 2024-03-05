@@ -54,6 +54,10 @@ public class CoinsFactoryController
             var growable = GetRandomGrowable(relativeObj);
             SpawnCoin(relativeObj, 0.5f, growable.GetMaxHeight() - growable.GetFilledTopLocalPoint().y - 0.3f);
         }
+        else
+        {
+            _saveService.SaveAllData();
+        }    
     }
 
     private void SpawnCoin(Transform relativeObj)

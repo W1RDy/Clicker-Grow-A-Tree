@@ -12,14 +12,11 @@ public class Coin : MonoBehaviourWithDestroyableByCamera
     private Vector2 _positionInGrowableCoord;
     private AudioPlayer _audioPlayer;
 
-    private void Awake()
+    public void Initialize(IGrowable growable, CoinsSpawnSettings coinsSpawnSettings)
     {
         _coinsCounter = ServiceLocator.Instance.Get<CoinsCounter>();
         _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
-    }
 
-    public void Initialize(IGrowable growable, CoinsSpawnSettings coinsSpawnSettings)
-    {
         _settings = coinsSpawnSettings;
         _growable = growable;
         _positionInGrowableCoord = _growable.GetGrowableTransform().InverseTransformPoint(transform.position);

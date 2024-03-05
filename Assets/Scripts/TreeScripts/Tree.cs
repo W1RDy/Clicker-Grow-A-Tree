@@ -10,6 +10,7 @@ public class Tree : MonoBehaviour, IService, IGrowable
     private CoroutineQueue _coroutineQueue;
     private SaveService _saveService;
     private Action SaveData;
+    private Action Unsubscribe;
 
     private float _height = 0;
     private float _trunkHeight;
@@ -24,9 +25,16 @@ public class Tree : MonoBehaviour, IService, IGrowable
 
         SaveData = () =>
         {
-            _saveService.SaveDataOnQuit -= SaveData;
             _saveService.SaveHeight(_height);
         };
+
+        Unsubscribe = () =>
+        {
+            _saveService.SaveDataOnQuit -= SaveData;
+            _saveService.QuitApplication -= Unsubscribe;
+        };
+
+        _saveService.QuitApplication += Unsubscribe;
 
         _saveService.SaveDataOnQuit += SaveData;
 

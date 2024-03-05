@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class AudioButton : MonoBehaviour
@@ -11,11 +12,19 @@ public class AudioButton : MonoBehaviour
 
     private void Start()
     {
-        _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
-        _button = GetComponent<Button>();
-        _image = GetComponent<Image>();
+        StartCoroutine(WaitWhileRegistered());
+    }
 
-        _button.onClick.AddListener(ChangeAudioSettings);
+    private IEnumerator WaitWhileRegistered()
+    {
+        yield return new WaitUntil(() => ServiceLocator.Instance.IsRegistered);
+        {
+            _audioPlayer = ServiceLocator.Instance.Get<AudioPlayer>();
+            _button = GetComponent<Button>();
+            _image = GetComponent<Image>();
+
+            _button.onClick.AddListener(ChangeAudioSettings);
+        }
     }
 
     private void ChangeAudioSettings()

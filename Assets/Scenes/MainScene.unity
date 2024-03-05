@@ -3568,46 +3568,11 @@ MonoBehaviour:
   - {fileID: 3328277542739775652}
   - {fileID: 7193970894862452793}
   _upgradeConfigs:
-  - _upgradePath: 0
-    _startUpgradeValue:
-    - 0.005
-    _startUpgradeCost: 01000000010000000200000008000000
-    _upgradeValueChanges: 0.008
-    _upgradeCostChanges: 8
-    _changeValueIntensity: 1.1
-    _changeCostIntensity: 1.8
-  - _upgradePath: 2
-    _startUpgradeValue:
-    - 1
-    _startUpgradeCost: 04000000
-    _upgradeValueChanges: 1
-    _upgradeCostChanges: 20
-    _changeValueIntensity: 1
-    _changeCostIntensity: 4
-  - _upgradePath: 3
-    _startUpgradeValue:
-    - 1
-    _startUpgradeCost: 0a000000
-    _upgradeValueChanges: 1
-    _upgradeCostChanges: 12
-    _changeValueIntensity: 1
-    _changeCostIntensity: 3
-  - _upgradePath: 1
-    _startUpgradeValue:
-    - 0.01
-    _startUpgradeCost: 0300000007000000
-    _upgradeValueChanges: 0.012
-    _upgradeCostChanges: 10
-    _changeValueIntensity: 1.1
-    _changeCostIntensity: 2
-  - _upgradePath: 4
-    _startUpgradeValue:
-    - 1
-    _startUpgradeCost: 00000000
-    _upgradeValueChanges: 1
-    _upgradeCostChanges: 0
-    _changeValueIntensity: 1
-    _changeCostIntensity: 1
+  - {fileID: 11400000, guid: 59652e90eb1547942bcba30452653421, type: 2}
+  - {fileID: 11400000, guid: acb95c33c97e3c441b80bdb3122318d1, type: 2}
+  - {fileID: 11400000, guid: 61a50ce4bfa3b8c48a511fa908332536, type: 2}
+  - {fileID: 11400000, guid: 7410629cb9dd7484a907ca1607e9edcd, type: 2}
+  - {fileID: 11400000, guid: 86776e27d594e534691c55fbfe72a27c, type: 2}
 --- !u!4 &1923413471
 Transform:
   m_ObjectHideFlags: 0

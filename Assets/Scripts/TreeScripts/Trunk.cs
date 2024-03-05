@@ -20,6 +20,8 @@ public class Trunk : MonoBehaviour, IGrowable
     private Action<Transform> DestroyOddTrunkCallback;
     private IndexDistributor _indexDistributor;
 
+    private Action Unsubscribe;
+
     public void InitializeTrunk(TrunkPart trunkPartPrefab, Action<Transform> relativeObjCallback, CoroutineQueue coroutineQueue)
     {
         _coroutineQueue = coroutineQueue;
@@ -33,7 +35,6 @@ public class Trunk : MonoBehaviour, IGrowable
         SaveData = () =>
         {
             _saveService.SaveTrunk(_trunksQueue);
-            _saveService.SaveDataOnQuit -= SaveData;
         };
 
         DestroyOddTrunkCallback = (transform) =>
@@ -43,6 +44,14 @@ public class Trunk : MonoBehaviour, IGrowable
             _trunksQueue.Remove(trunkPart);
             _indexDistributor.AddFreeIndex(trunkPart.Index);
         };
+
+        Unsubscribe = () =>
+        {
+            _saveService.SaveDataOnQuit -= SaveData;
+            _saveService.QuitApplication -= Unsubscribe;
+        };
+
+        _saveService.QuitApplication += Unsubscribe;
 
         _saveService.SaveDataOnQuit += SaveData;
 
@@ -118,11 +127,6 @@ public class Trunk : MonoBehaviour, IGrowable
     public Transform GetGrowableTransform()
     {
         return _heighestTrunkPart.GetGrowableTransform();
-    }
-
-    public void OnDestroy()
-    {
-        _saveService.SaveDataOnQuit -= SaveData;
     }
 
     public int GetIndex()

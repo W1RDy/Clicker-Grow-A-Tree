@@ -9,6 +9,7 @@ public class ScoreCounter : IService
     private ScoreIndicator _scoreIndicator;
     private SaveService _saveService;
     private Action SaveData;
+    private Action Unsubscribe;
 
     public void InitializeCounter()
     {
@@ -21,8 +22,15 @@ public class ScoreCounter : IService
         SaveData = () =>
         {
             _saveService.SaveScore(_score);
-            _saveService.SaveDataOnQuit -= SaveData;
         };
+
+        Unsubscribe = () =>
+        {
+            _saveService.SaveDataOnQuit -= SaveData;
+            _saveService.QuitApplication -= Unsubscribe;
+        };
+
+        _saveService.QuitApplication += Unsubscribe;
 
         _saveService.SaveDataOnQuit += SaveData;
     }

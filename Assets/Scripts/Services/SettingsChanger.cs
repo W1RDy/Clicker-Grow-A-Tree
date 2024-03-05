@@ -8,6 +8,7 @@ public class SettingsChanger : IService
     private SaveService _saveService;
 
     private Action SaveData;
+    private Action Unsubscribe;
 
     public SettingsChanger(GrowSettings settings, CoinsSpawnSettings coinsSpawnSettings)
     {
@@ -19,9 +20,15 @@ public class SettingsChanger : IService
         {
             _saveService.SaveGrowSettings(_growSettings);
             _saveService.SaveCoinsSettings(_coinsSpawnSettings);
-            _saveService.SaveDataOnQuit -= SaveData;
         };
 
+        Unsubscribe = () =>
+        {
+            _saveService.SaveDataOnQuit -= SaveData;
+            _saveService.QuitApplication -= Unsubscribe;
+        };
+
+        _saveService.QuitApplication += Unsubscribe;
         _saveService.SaveDataOnQuit += SaveData;
     }
 
@@ -52,6 +59,7 @@ public class SettingsChanger : IService
     public void ChangeCoinsCosts(int value)
     {
         _coinsSpawnSettings.CoinsCosts += value;
+        _saveService.SaveAllData();
     }
 
     private void ChangeCoinsSpawnSettings()
@@ -64,5 +72,6 @@ public class SettingsChanger : IService
         var branchesCount = _growSettings.BranchesCount * _growSettings.BranchingValue;
         var suggestCoinsCount = (int)Mathf.Floor(Mathf.Lerp(1, _coinsSpawnSettings.MaxCoins, _growSettings.UpgradeProgress));
         _coinsSpawnSettings.CoinsCount = Mathf.Clamp(suggestCoinsCount, 1, branchesCount + 1);
+        _saveService.SaveAllData();
     }
 }
