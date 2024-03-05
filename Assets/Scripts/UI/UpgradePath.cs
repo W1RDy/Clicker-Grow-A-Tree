@@ -73,7 +73,7 @@ public class UpgradePath : MonoBehaviour
         _upgradeButton.SetUpgradeParameters(_upgradeValue, _upgradeCost);
         _indicatorsController.UpdateIndicators(_upgradeValue, parameters.currentParameter);
 
-        if (parameters.currentParameter == parameters.maxParameter) DeactivateUpgradePath();
+        if (parameters.currentParameter >= parameters.maxParameter) DeactivateUpgradePath();
     }
 
     public void ActivateUpgradePath()
@@ -85,7 +85,7 @@ public class UpgradePath : MonoBehaviour
         }
     }
 
-    private void DeactivateUpgradePath()
+    public void DeactivateUpgradePath()
     {
         if (_isActivated)
         {

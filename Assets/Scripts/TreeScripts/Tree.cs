@@ -8,32 +8,34 @@ public class Tree : MonoBehaviour, IService, IGrowable
     [SerializeField] private Trunk _trunk;
     [SerializeField] private TrunkPart _trunkPartPrefab;
     private CoroutineQueue _coroutineQueue;
+    private SaveService _saveService;
+    private Action SaveData;
 
     private float _height = 0;
     private float _trunkHeight;
-    private SaveService _saveService;
-    public GrowSettings GrowSettings {get; private set;}
-    private Action SaveData;
-
-    public void SetGrowSettings(GrowSettings growSettings)
-    {
-        GrowSettings = growSettings;
-    }
 
     public void InitializeTree(Action<Transform> relativeObjCallback)
     {
         _coroutineQueue = new CoroutineQueue(this, 12);
-        _saveService = ServiceLocator.Instance.Get<SaveService>();
         _trunk.InitializeTrunk(_trunkPartPrefab, relativeObjCallback, _coroutineQueue);
         _trunkHeight = _trunkPartPrefab.transform.GetChild(0).localScale.y * _trunkPartPrefab.GetComponentInChildren<SpriteRenderer>().sprite.bounds.size.y;
 
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
+
         SaveData = () =>
         {
-            _saveService.SaveTrunk(GetRelativeGrowable() as TrunkPart);
             _saveService.SaveDataOnQuit -= SaveData;
+            _saveService.SaveHeight(_height);
         };
 
         _saveService.SaveDataOnQuit += SaveData;
+
+        _height = _saveService.DataContainer.Height;
+    }
+
+    public void SetRelativeCallback(Action<Transform> relativeObjCallback)
+    {
+        _trunk.SetRelativeCallback(relativeObjCallback);
     }
 
     public void Grow(float growValue)
@@ -60,6 +62,11 @@ public class Tree : MonoBehaviour, IService, IGrowable
         return _trunk.GetFilledTopGlobalPoint();
     }
 
+    public Vector3 GetMaxTopPoint()
+    {
+        return _trunk.GetMaxTopPoint();
+    }
+
     public float GetMaxHeight()
     {
         return _trunk.GetMaxHeight();
@@ -73,5 +80,10 @@ public class Tree : MonoBehaviour, IService, IGrowable
     public Transform GetGrowableTransform()
     {
         return _trunk.GetGrowableTransform();
+    }
+
+    public int GetIndex()
+    {
+        return 0;
     }
 }

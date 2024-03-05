@@ -25,17 +25,20 @@ public class BranchesFactoryController
         var spawnedObjs = new Branch[spawnSettings.Length];
         for (int i = 0; i < spawnSettings.Length; i++)
         {
-            var rotation = new Quaternion
-            {
-                eulerAngles = new Vector3(0, 0, spawnSettings[i].SpawnRot)
-            };
-            if (spawnSettings[i].IsSpawnToRight) rotation = Quaternion.Inverse(rotation);
-            rotation = relativeObj.rotation * rotation;
-            var position = relativeObj.TransformPoint(spawnSettings[i].SpawnPos);
-
-            spawnedObjs[i] = _factory.Create(position, rotation, _container.transform) as Branch;
+            spawnedObjs[i] = SpawnByFactory(spawnSettings[i], relativeObj) as Branch;
         }
         return spawnedObjs;
+    }
+
+    public MonoBehaviour SpawnByFactory(SpawnBranchSettings spawnSetting, Transform relativeObj)
+    {
+        var rotation = Quaternion.Euler(0, 0, spawnSetting.SpawnRot);
+
+        if (spawnSetting.IsSpawnToRight) rotation = Quaternion.Inverse(rotation);
+        rotation = relativeObj.rotation * rotation;
+        var position = relativeObj.TransformPoint(spawnSetting.SpawnPos);
+
+        return _factory.Create(position, rotation, _container.transform) ;
     }
 
     public MonoBehaviour[] SpawnByFactoryWithRandomSettings(Transform relativeObj)
@@ -47,6 +50,7 @@ public class BranchesFactoryController
 
     private SpawnBranchSettings[] RandomizeBranchPoints(Transform relativeObj)
     {
+        Debug.Log(_spawnSettingsConfig.BranchCount);
         var spawnSettings = new SpawnBranchSettings[_spawnSettingsConfig.BranchCount];
         for (int i = 0; i < _spawnSettingsConfig.BranchCount; i++)
         {

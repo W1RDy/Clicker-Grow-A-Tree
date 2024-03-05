@@ -9,17 +9,22 @@ public class GameController : MonoBehaviour, IService
     private CustomCamera _camera;
     private TutorialController _tutorialController;
     public event Action FinishGame;
+    private SaveService _saveService;
 
     public void InitializeController()
     {
         _tree = ServiceLocator.Instance.Get<Tree>();
         _camera = ServiceLocator.Instance.Get<CustomCamera>();
         _tutorialController = ServiceLocator.Instance.Get<TutorialController>();
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
     }
 
     private void Start()
     {
-        _tutorialController.ActivateTutorial();
+        if (_saveService.DataContainer.IsDefaultData)
+        {
+            _tutorialController.ActivateTutorial();
+        }
     }
 
     private void Update()

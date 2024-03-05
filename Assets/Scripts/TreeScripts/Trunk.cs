@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Trunk : MonoBehaviour, IGrowable
@@ -7,47 +9,89 @@ public class Trunk : MonoBehaviour, IGrowable
     private TrunkPart _trunkPartPrefab;
     private float _maxHeight = 0;
     private TrunkPart _heighestTrunkPart;
-    private Action<Transform> _trunkPartCallback;
+    private Action<Transform> _relativeObjCallback;
     private CoroutineQueue _coroutineQueue;
     private IGrowable _topFilledGrowable;
     private Action<IGrowable> _endCoroutineCallback;
 
-    public void InitializeTrunk(TrunkPart trunkPartPrefab, Action<Transform> trunkPartCallback, CoroutineQueue coroutineQueue)
+    private SaveService _saveService;
+    private Action SaveData;
+    private List<TrunkPart> _trunksQueue = new List<TrunkPart>();
+    private Action<Transform> DestroyOddTrunkCallback;
+    private IndexDistributor _indexDistributor;
+
+    public void InitializeTrunk(TrunkPart trunkPartPrefab, Action<Transform> relativeObjCallback, CoroutineQueue coroutineQueue)
     {
         _coroutineQueue = coroutineQueue;
-        _trunkPartCallback = trunkPartCallback;
         _trunkPartPrefab = trunkPartPrefab;
         _endCoroutineCallback = growable => _topFilledGrowable = growable;
+        _indexDistributor = new IndexDistributor();
+        SetRelativeCallback(relativeObjCallback);
 
-        AddNewTrunkPart();
+        _saveService = ServiceLocator.Instance.Get<SaveService>();
+
+        SaveData = () =>
+        {
+            _saveService.SaveTrunk(_trunksQueue);
+            _saveService.SaveDataOnQuit -= SaveData;
+        };
+
+        DestroyOddTrunkCallback = (transform) =>
+        {
+            var trunkPart = transform.GetComponent<TrunkPart>();
+            trunkPart.Destroying -= DestroyOddTrunkCallback;
+            _trunksQueue.Remove(trunkPart);
+            _indexDistributor.AddFreeIndex(trunkPart.Index);
+        };
+
+        _saveService.SaveDataOnQuit += SaveData;
+
+        foreach (var config in _saveService.DataContainer.TrunkSaveConfig.OrderBy(config => config.Position.y))
+        {
+            SpawnTrunkPart(transform.InverseTransformPoint(config.Position), config.FillValue, config.Index);
+        }
+    }
+
+    public void SetRelativeCallback(Action<Transform> relativeObjCallback)
+    {
+        _relativeObjCallback = relativeObjCallback;
+        Debug.Log(_relativeObjCallback);
     }
 
     public void Grow(float sumHeight)
     {
         if (sumHeight >= _maxHeight)
         {
-            //Debug.Log(sumHeight);
-            //Debug.Log(_maxHeight);
             _heighestTrunkPart.Grow(1);
+            Debug.Log("Hey");
             AddNewTrunkPart();
         }
         else
         {
-            //Debug.Log((sumHeight / _heighestTrunkPart.Height) % 1);
             _heighestTrunkPart.Grow((sumHeight / _heighestTrunkPart.Height) % 1);
         }
     }
 
-    private void AddNewTrunkPart()
+    private void SpawnTrunkPart(Vector2 pos, float fillValue, int index)
     {
-        var spawnHeight = _maxHeight == 0 ? 0 : _maxHeight  + _trunkPartPrefab.Height;
         _heighestTrunkPart = Instantiate(_trunkPartPrefab, Vector2.zero, Quaternion.identity);
         if (_topFilledGrowable == null) _topFilledGrowable = _heighestTrunkPart;
         _heighestTrunkPart.transform.SetParent(transform);
-        _heighestTrunkPart.transform.localPosition = new Vector2(0, spawnHeight);
-        _heighestTrunkPart.InitializeTrunk(_trunkPartCallback, _coroutineQueue, _endCoroutineCallback);
+        _heighestTrunkPart.transform.localPosition = pos;
+        _heighestTrunkPart.Index = index;
 
-        _maxHeight = _maxHeight + _heighestTrunkPart.Height;
+        _heighestTrunkPart.InitializeTrunk(_relativeObjCallback, _coroutineQueue, fillValue, _endCoroutineCallback);
+
+        _trunksQueue.Add(_heighestTrunkPart);
+        _heighestTrunkPart.Destroying += DestroyOddTrunkCallback;
+
+        _maxHeight = pos.y + _heighestTrunkPart.Height;
+    }
+
+    private void AddNewTrunkPart()
+    {
+        var spawnHeight = _maxHeight;
+        SpawnTrunkPart(new Vector2(0, spawnHeight), 0, _indexDistributor.GetFreeIndex());
     }
 
     public Vector2 GetFilledTopLocalPoint()
@@ -57,6 +101,7 @@ public class Trunk : MonoBehaviour, IGrowable
 
     public Vector2 GetFilledTopGlobalPoint()
     {
+        if (_topFilledGrowable as TrunkPart == null) return GetMaxTopPoint(); 
         return _topFilledGrowable.GetFilledTopGlobalPoint();
     }
 
@@ -73,5 +118,20 @@ public class Trunk : MonoBehaviour, IGrowable
     public Transform GetGrowableTransform()
     {
         return _heighestTrunkPart.GetGrowableTransform();
+    }
+
+    public void OnDestroy()
+    {
+        _saveService.SaveDataOnQuit -= SaveData;
+    }
+
+    public int GetIndex()
+    {
+        return 0;
+    }
+
+    public Vector3 GetMaxTopPoint()
+    {
+        return _heighestTrunkPart.GetFilledTopGlobalPoint();
     }
 }

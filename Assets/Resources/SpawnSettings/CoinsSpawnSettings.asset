@@ -22,5 +22,5 @@ MonoBehaviour:
   _coinsCount: 1
   _maxCoins: 6
   _distanceChangeIntensity: 4
-  _coinsCosts: 80
-  _maxCosts: 90
+  _coinsCosts: 1
+  _maxCosts: 2

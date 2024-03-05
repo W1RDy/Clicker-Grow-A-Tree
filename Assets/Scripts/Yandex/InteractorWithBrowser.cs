@@ -1,6 +1,9 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using UnityEngine;
 
 public static class InteractorWithBrowser
@@ -18,6 +21,10 @@ public static class InteractorWithBrowser
     private static extern string GetLanguageExtern();
     [DllImport("__Internal")]
     private static extern string PlayerIsInitialized();
+    [DllImport("__Internal")]
+    private static extern void SaveDataExtern(string data);
+    [DllImport("__Internal")]
+    private static extern string LoadDataExtern();
 
 
     //    public static void Authorize()
@@ -74,5 +81,26 @@ public static class InteractorWithBrowser
 #if UNITY_EDITOR
         return true;
 #endif  
+    }
+
+    public static void SaveData(string data)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        SaveDataExtern(data);
+#endif
+#if UNITY_EDITOR
+        File.WriteAllText(Path.Combine(Application.streamingAssetsPath, "Data.json"), data, Encoding.UTF8);
+#endif
+    }
+
+    public static string LoadData()
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        return LoadDataExtern();
+#endif
+#if UNITY_EDITOR
+        var json = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "Data.json"));
+        return json;
+#endif
     }
 }

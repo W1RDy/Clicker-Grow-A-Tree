@@ -16,7 +16,6 @@ public class GrowController : IService
         _scoreCounter = ServiceLocator.Instance.Get<ScoreCounter>();
         _growablesService = ServiceLocator.Instance.Get<GrowablesService>();
         _tree = _growablesService.GetTree();
-        _tree.SetGrowSettings(_growSettings);
     }
 
     public void Grow()

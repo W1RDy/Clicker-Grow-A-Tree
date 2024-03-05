@@ -9,9 +9,10 @@ public class BranchSpawnSettingsConfig : ScriptableObject
     [SerializeField] private SpawnBranchSettings _minBranchSetting;
     [SerializeField] private SpawnBranchSettings _maxBranchSetting;
     [SerializeField] private float _distanceBetweenBranch = 1.2f;
-    [SerializeField] private int _branchCount = 2;
+    [SerializeField] private int _branchCount = 1;
     [SerializeField] private int _maxBranchCount;
 
+    public int MaxBranchCount => _maxBranchCount;
     public SpawnBranchSettings MinBranchSetting => _minBranchSetting;
     public SpawnBranchSettings MaxBranchSetting => _maxBranchSetting;
     public float DistanceBetweenBranch
@@ -30,6 +31,7 @@ public class BranchSpawnSettingsConfig : ScriptableObject
         set
         {
             if (value > _branchCount && value <= _maxBranchCount) _branchCount = value;
+            else if (value > _maxBranchCount && _branchCount != _maxBranchCount) _branchCount = _maxBranchCount;
         } 
     }
 }

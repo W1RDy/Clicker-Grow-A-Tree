@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 using System.IO;
 using Newtonsoft.Json;
 using System.Text;
+using Unity.VisualScripting;
+using UnityEngine.Networking;
 
 public class SaveService : MonoBehaviour, IService
 {
@@ -16,19 +18,20 @@ public class SaveService : MonoBehaviour, IService
 
     public void LoadData(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
     {
-        var json = File.ReadAllText(Path.Combine(Application.streamingAssetsPath,"Data.json"));
+        var json = InteractorWithBrowser.LoadData();
         if (json != null && json != "")
         {
             JsonUtility.FromJsonOverwrite(json, _dataContainer);
+            _dataContainer.IsDefaultData = false;
         }
         else _dataContainer.SetDefaultSettings(growSettings, coinsSpawnSettings);
     }
 
     public void SaveData()
     {
-        File.WriteAllText(Path.Combine(Application.streamingAssetsPath, "Data.json"), JsonConvert.SerializeObject(_dataContainer, Formatting.Indented, 
-            new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }),
-            Encoding.UTF8);
+        var json = JsonConvert.SerializeObject(_dataContainer, Formatting.Indented,
+    new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        InteractorWithBrowser.SaveData(json);
         Debug.Log("SaveDataToJSON");
     }
 
@@ -37,52 +40,46 @@ public class SaveService : MonoBehaviour, IService
         List<BranchSaveConfig> configs = new List<BranchSaveConfig>();
         foreach (Branch branch in branches)
         {
-            configs.Add(new BranchSaveConfig(branch.Index, branch.transform.position, branch.transform.rotation));
+            if (branch.GetRelativeGrowable() == null) continue;
+            var angle = branch.transform.localRotation.eulerAngles.z;
+            angle = angle > 180 ? Mathf.Abs(angle - 360) : angle;
+
+            var relativeIndex = branch.GetRelativeGrowable().GetIndex();
+
+            var config = new BranchSaveConfig(branch.Index, branch.transform.localPosition, angle, branch.transform.localPosition.x > 0, branch.BranchLevel, relativeIndex);
+            config.FillValue = branch.GetFilledTopLocalPoint().y / branch.GetMaxHeight();
+            configs.Add(config);
         }
 
         _dataContainer.BranchConfigs = configs;
         Debug.Log("SaveBranches");
     }
 
-    public void SaveGrowableValue(IGrowable growable)
+    public void SaveTrunk(List<TrunkPart> trunks)
     {
-        if (growable is Branch branch)
+        var result = new List<TrunkSaveConfig>();
+        foreach(var trunk in  trunks)
         {
-            foreach (var config in _dataContainer.BranchConfigs)
-            {
-                if (config.Index == branch.Index && config.Position == branch.transform.position)
-                {
-                    config.FillValue = branch.GetFilledTopLocalPoint().y / branch.GetMaxHeight();
-                    break;
-                }
-            }
+            Debug.Log(trunk.GetFilledTopLocalPoint().y / trunk.GetMaxHeight());
+            result.Add(new TrunkSaveConfig(trunk.transform.position, trunk.GetFilledTopLocalPoint().y / trunk.GetMaxHeight(), trunk.Index));
         }
-        else
-        {
-            var value = growable.GetFilledTopLocalPoint().y / growable.GetMaxHeight();
-            _dataContainer.TrunkConfig.FillValue = (float)Math.Round(value, 3);
-        }
-        Debug.Log("SaveGrowableValue");
-    }
 
-    public void SaveTrunk(TrunkPart trunk)
-    {
-        _dataContainer.TrunkConfig = new TrunkSaveConfig(trunk.transform.position, 0);
+        _dataContainer.TrunkSaveConfig = result;
         Debug.Log("SaveTrunk");
     }
 
-    public void SaveCoins(List<Coin> coins)
-    {
-        List<CoinsSaveConfig> configs = new List<CoinsSaveConfig>();
+    //public void SaveCoins(List<Coin> coins)
+    //{
+    //    List<CoinsSaveConfig> configs = new List<CoinsSaveConfig>();
 
-        foreach (var coin in coins)
-        {
-            configs.Add(new CoinsSaveConfig(coin.transform.position));
-        }
+    //    foreach (var coin in coins)
+    //    {
+    //        configs.Add(new CoinsSaveConfig(coin.transform.position));
+    //    }
 
-        _dataContainer.CoinsSaveConfigs = configs;
-        Debug.Log("SaveCoins");
-    }
+    //    _dataContainer.CoinsSaveConfigs = configs;
+    //    Debug.Log("SaveCoins");
+    //}
 
     public void SaveGrowSettings(GrowSettings growSettings)
     {
@@ -94,6 +91,30 @@ public class SaveService : MonoBehaviour, IService
     {
         _dataContainer.CoinsSpawnConfig = new CoinsSaveSettingsConfig(coinsSpawnSettings);
         Debug.Log("SaveCoinsSettings");
+    }
+
+    public void SaveHeight(float height)
+    {
+        _dataContainer.Height = height;
+        Debug.Log("SaveHeight");
+    }
+
+    public void SaveScore(int score)
+    {
+        _dataContainer.Score = score;
+        Debug.Log("SaveScore");
+    }
+
+    public void SaveCoins(int coins)
+    {
+        _dataContainer.Coins = coins;
+        Debug.Log("SaveCoins");
+    }
+
+    public void SaveCameraPos(Vector3 pos)
+    {
+        _dataContainer.CameraPos = pos;
+        Debug.Log("SaveCameraPos");
     }
 
     public void OnApplicationQuit()

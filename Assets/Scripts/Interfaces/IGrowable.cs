@@ -10,4 +10,5 @@ public interface IGrowable
     public float GetMaxHeight();
     public IGrowable GetRelativeGrowable();
     public Transform GetGrowableTransform();
+    public int GetIndex();
 }

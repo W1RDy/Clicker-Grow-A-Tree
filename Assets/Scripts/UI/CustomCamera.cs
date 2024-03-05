@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,12 @@ public class CustomCamera : MonoBehaviour, IService
         _moveController = new CameraMoveController(_speed, transform);
         _tree = ServiceLocator.Instance.Get<Tree>();
         DeactivateMovement();
+    }
+
+    private void Start()
+    {
+        var posY = Mathf.Clamp(_tree.GetMaxTopPoint().y + heightOffset, 0, float.MaxValue);
+        transform.position = new Vector3(0, posY, -10);
     }
 
     private void Update()
@@ -48,5 +55,10 @@ public class CustomCamera : MonoBehaviour, IService
     public Vector2 GetBottomBorderPoint()
     {
         return new Vector2 (0, transform.position.y - _camera.orthographicSize);
+    }
+
+    private void OnApplicationQuit()
+    {
+        transform.position = new Vector3(0, _tree.GetMaxTopPoint().y + heightOffset, -10);
     }
 }

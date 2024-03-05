@@ -12,8 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a3eb89842440d34da8d188024a8399c, type: 3}
   m_Name: DataContainer
   m_EditorClassIdentifier: 
+  _isDefaultData: 1
   _branchConfigs: []
-  _trunkConfig:
-    _position: {x: 0, y: 125.934814, z: 0}
-    _fillValue: 0.955
-  _coinsConfigs: []
+  _trunkSaveConfig:
+  - _position: {x: 0, y: -3, z: 0}
+    _fillValue: 0
+    _index: 0
+  _growConfig:
+    _trunkGrowSpeed: 0.015
+    _branchesGrowSpeed: 0.04
+    _branchesCount: 1
+    _branchingValue: 0
+  _coinsSpawnConfig:
+    _spawnChances:
+    - level: 0
+      spawnChance: 100
+    - level: 1
+      spawnChance: 0
+    - level: 2
+      spawnChance: 0
+    _coinsCount: 1
+    _distanceChangeIntensity: 4
+    _coinsCosts: 1
+  _height: 0

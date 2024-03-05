@@ -12,7 +12,12 @@ public class CoinsSpawnSettings : ScriptableObject
 
     public void SetSettings(CoinsSaveSettingsConfig _saveSettings)
     {
-        _spawnChances = _saveSettings.SpawnChances;
+        _spawnChances = new SpawnChances[3]
+        {
+            new SpawnChances(_saveSettings.SpawnChances[0].level, _saveSettings.SpawnChances[0].spawnChance),
+            new SpawnChances(_saveSettings.SpawnChances[1].level, _saveSettings.SpawnChances[1].spawnChance),
+            new SpawnChances(_saveSettings.SpawnChances[2].level, _saveSettings.SpawnChances[2].spawnChance)
+        };
         _coinsCosts = _saveSettings.CoinsCosts;
         _distanceChangeIntensity = _saveSettings.DistanceChangeIntensity;
         _coinsCount = _saveSettings.CoinsCount;

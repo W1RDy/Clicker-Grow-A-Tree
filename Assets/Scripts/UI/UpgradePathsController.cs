@@ -8,11 +8,13 @@ public class UpgradePathsController : MonoBehaviour, IService
     [SerializeField] private UpgradeConfig[] _upgradeConfigs;
     private UpgradePath[] _upgradePaths; 
     private GrowSettings _growSettings;
+    private CoinsSpawnSettings _coinsSpawnSettings;
     private bool _allPathsActivated;
 
     public void InitializeUpgradePaths(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
     {
         _growSettings = growSettings;
+        _coinsSpawnSettings = coinsSpawnSettings;
         _upgradePaths = Screen.height < Screen.width ? _upgradePathsPC : _upgradePathsMobile;
 
         foreach (var upgradePath in _upgradePaths)
@@ -33,11 +35,22 @@ public class UpgradePathsController : MonoBehaviour, IService
 
     public void ActivateUpgradePath(UpgradeType upgradeType)
     {
+        ActivateDeactivatePath(upgradeType, true);
+    }
+
+    public void DeactivateUpgradePath(UpgradeType upgradeType)
+    {
+        ActivateDeactivatePath(upgradeType, false);
+    }
+
+    private void ActivateDeactivatePath(UpgradeType upgradeType, bool isActivate)
+    {
         foreach (var upgradePath in _upgradePaths)
         {
             if (upgradePath.UpgradeType == upgradeType)
             {
-                upgradePath.ActivateUpgradePath();
+                if (isActivate) upgradePath.ActivateUpgradePath();
+                else upgradePath.DeactivateUpgradePath();
                 break;
             }
         }
@@ -57,6 +70,12 @@ public class UpgradePathsController : MonoBehaviour, IService
                 }
             }
         }
+
+        if (_growSettings.TrunkGrowSpeed >= _growSettings.MaxTrunkGrowSpeed) DeactivateUpgradePath(UpgradeType.TrunkSpeed);
+        if (_growSettings.BranchesGrowSpeed >= _growSettings.MaxBranchGrowSpeed) DeactivateUpgradePath(UpgradeType.BranchSpeed);
+        if (_growSettings.BranchingValue >= _growSettings.MaxBranchingValue) DeactivateUpgradePath(UpgradeType.BranchingValue);
+        if (_growSettings.BranchesCount >= _growSettings.MaxBranchesCount) DeactivateUpgradePath(UpgradeType.BranchCount);
+        if (_coinsSpawnSettings.CoinsCosts >= _coinsSpawnSettings.MaxCosts) DeactivateUpgradePath(UpgradeType.CoinsCosts);
     }
 }
 

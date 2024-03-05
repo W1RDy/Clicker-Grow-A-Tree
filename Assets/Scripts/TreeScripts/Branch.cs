@@ -7,8 +7,9 @@ using static UnityEngine.Rendering.DebugUI;
 public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
 {
     public int Index { get; set; }
+    public int BranchLevel { get; private set; }
+
     private const string AppearValue = "_Fill";
-    private int _branchLevel;
     private Material _material;
     private float _currentGrowValue = 0;
     private Transform _relativeObj;
@@ -17,34 +18,22 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
     public event Action<int, Branch> Destory;
     private Action<float> LerpChangerCallback;
 
-    private SaveService _saveService;
-    private Action SaveData;
-
-    public void InitializeBranch(Transform relativeObj, int branchLevel)
+    public void InitializeBranch(Transform relativeObj, int branchLevel, float fillingValue)
     {
         var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        _branchLevel = branchLevel;
+        BranchLevel = branchLevel;
         _relativeObj = relativeObj;
         _growableParent = _relativeObj.GetComponent<IGrowable>();
         _material = spriteRenderer.material;
         Height = transform.GetChild(0).localScale.y * spriteRenderer.sprite.bounds.size.y;
 
-        _saveService = ServiceLocator.Instance.Get<SaveService>();
-
         LerpChangerCallback = value =>
         {
             _currentGrowValue = value;
             _material.SetFloat(AppearValue, _currentGrowValue);
-            
         };
 
-        SaveData = () =>
-        {
-            _saveService.SaveGrowableValue(this);
-            _saveService.SaveDataOnQuit -= SaveData;
-        };
-
-        _saveService.SaveDataOnQuit += SaveData;
+        LerpChangerCallback.Invoke(fillingValue);
     }
 
     public void Grow(float growValue)
@@ -78,8 +67,7 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
 
     public override void OnDestroy()
     {
-        Destory?.Invoke(_branchLevel, this);
-        _saveService.SaveDataOnQuit -= SaveData;
+        Destory?.Invoke(BranchLevel, this);
         base.OnDestroy();
     }
 
@@ -91,5 +79,10 @@ public class Branch : MonoBehaviourWithDestroyableByCamera, IGrowable
     public Transform GetGrowableTransform()
     {
         return transform;
+    }
+
+    public int GetIndex()
+    {
+        return Index;
     }
 }

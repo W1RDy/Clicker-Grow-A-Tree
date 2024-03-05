@@ -9,13 +9,13 @@ public class CoinsFactoryController
     private CoinsFactory _coinsFactory;
     private BusyPosService _busyPosService;
     private GrowSettings _growSettings;
-    private bool _isFirstSpawn;
     private float _spawnDistance = 2f;
 
     private SaveService _saveService;
     private CoinService _coinService;
+    private bool _isFirstSpawn;
 
-    private Action SaveData;
+    //private Action SaveData;
 
     public CoinsFactoryController(CoinsSpawnSettings coinsSpawnSettings, GrowSettings growSettings)
     {
@@ -28,17 +28,17 @@ public class CoinsFactoryController
         _coinsFactory = new CoinsFactory(container);
         _coinsFactory.LoadResources();
         _busyPosService = new BusyPosService();
-        _isFirstSpawn = true;
 
         _saveService = ServiceLocator.Instance.Get<SaveService>();
+        _isFirstSpawn = true;
 
-        SaveData = () =>
-        {
-            _saveService.SaveCoins(_coinService.GetCoins());
-            _saveService.SaveDataOnQuit -= SaveData;
-        };
+        //SaveData = () =>
+        //{
+        //    _saveService.SaveCoins(_coinService.GetCoins());
+        //    _saveService.SaveDataOnQuit -= SaveData;
+        //};
 
-        _saveService.SaveDataOnQuit += SaveData;
+        //_saveService.SaveDataOnQuit += SaveData;
     }
 
     public void SpawnCoins(Transform relativeObj)
@@ -48,7 +48,7 @@ public class CoinsFactoryController
             SpawnCoin(relativeObj);
         }
 
-        if (_isFirstSpawn)
+        if (_saveService.DataContainer.IsDefaultData && _isFirstSpawn)
         {
             _isFirstSpawn = false;
             var growable = GetRandomGrowable(relativeObj);
@@ -122,7 +122,7 @@ public class CoinsFactoryController
         if (growbaleLevel > 0)
         {
             var branches = _growablesService.GetBranches(growbaleLevel, relativeObj);
-            Debug.Log(branches.Count);
+            if (branches.Count == 0) return GetRandomGrowable(relativeObj);
             var randomGrowable = branches[Random.Range(0, branches.Count)];
             return randomGrowable;
         }
@@ -157,4 +157,10 @@ public class SpawnChances
 {
     public int level;
     public int spawnChance;
+
+    public SpawnChances(int level, int spawnChance)
+    {
+        this.level = level;
+        this.spawnChance = spawnChance;
+    }
 }

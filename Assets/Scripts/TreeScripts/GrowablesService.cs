@@ -94,9 +94,11 @@ public class GrowablesService : IService
             for (int i = 0; i < level; i++)
             {
                 growable = growable.GetRelativeGrowable();
+
                 if (growable == null) break;
                 if (relativeObj == growable.GetGrowableTransform())
                 {
+                    Debug.Log(branch);
                     result.Add(branch);
                     break;
                 }
