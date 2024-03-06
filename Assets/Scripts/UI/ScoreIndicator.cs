@@ -9,6 +9,7 @@ public class ScoreIndicator : MonoBehaviour, IService
 
     public void SetScore(int score)
     {
+        Debug.Log(score);
         _scoreText.text = score.ToString();
     }
 }

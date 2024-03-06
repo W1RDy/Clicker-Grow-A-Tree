@@ -13,11 +13,9 @@ MonoBehaviour:
   m_Name: DataContainer
   m_EditorClassIdentifier: 
   _isDefaultData: 1
-  _branchConfigs: []
-  _trunkSaveConfig:
-  - _position: {x: 0, y: -3, z: 0}
-    _fillValue: 0
-    _index: 0
+  _height: 0
+  _score: 0
+  _coins: 0
   _growConfig:
     _trunkGrowSpeed: 0.015
     _branchesGrowSpeed: 0.04
@@ -34,4 +32,29 @@ MonoBehaviour:
     _coinsCount: 1
     _distanceChangeIntensity: 4
     _coinsCosts: 1
-  _height: 0
+  _upgradePathSaveConfigs:
+  - _upgradeType: 0
+    _upgradeValue: 0.005
+    _upgradeCost: 1
+    _upgradeCount: 0
+  - _upgradeType: 2
+    _upgradeValue: 1
+    _upgradeCost: 4
+    _upgradeCount: 0
+  - _upgradeType: 3
+    _upgradeValue: 1
+    _upgradeCost: 10
+    _upgradeCount: 0
+  - _upgradeType: 1
+    _upgradeValue: 0.01
+    _upgradeCost: 3
+    _upgradeCount: 0
+  - _upgradeType: 4
+    _upgradeValue: 1
+    _upgradeCost: 0
+    _upgradeCount: 0
+  _trunkSaveConfig:
+  - _positionY: -3
+    _fillValue: 0
+    _index: 0
+  _branchConfigs: []

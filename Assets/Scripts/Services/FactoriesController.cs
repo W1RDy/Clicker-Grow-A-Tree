@@ -111,7 +111,7 @@ public class FactoriesController : IService
                 }
 
                 var branchFactoryController = _branchFactoryControllers[config.BranchLevel - 1];
-                var spawnPos = relativeObj.InverseTransformPoint(config.Position);
+                var spawnPos = relativeObj.InverseTransformPoint(new Vector2(config.PositionX, config.Position));
                 spawnPos = new Vector2(spawnPos.x, spawnPos.y / relativeObj.localScale.y);
 
                 var relativeRotation = relativeObj.position.x < 0 ? Quaternion.Inverse(relativeObj.rotation) : relativeObj.rotation;

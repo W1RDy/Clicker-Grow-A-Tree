@@ -1892,6 +1892,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: aa43261220cb8d943b62a72a405361a6, type: 2}
     - target: {fileID: 3713647020226461353, guid: e1008beedc0903e4783244c3143d9f49, type: 3}
+      propertyPath: _dataContainerTest
+      value: 
+      objectReference: {fileID: 11400000, guid: 8abf98df1a0962e45a3b7598994b731e, type: 2}
+    - target: {fileID: 3713647020226461353, guid: e1008beedc0903e4783244c3143d9f49, type: 3}
       propertyPath: _dataContainerDefault
       value: 
       objectReference: {fileID: 11400000, guid: aa43261220cb8d943b62a72a405361a6, type: 2}

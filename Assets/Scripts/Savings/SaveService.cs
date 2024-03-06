@@ -34,14 +34,33 @@ public class SaveService : MonoBehaviour, IService
 
     private void LoadDataAfterWaiting(GrowSettings growSettings, CoinsSpawnSettings coinsSpawnSettings)
     {
+#if UNITY_EDITOR
         Debug.Log(_json);
         if (_json != null && _json != "")
         {
+            //JsonUtility.FromJsonOverwrite(_json, _dataContainer);
             JsonUtility.FromJsonOverwrite(_json, _dataContainer);
-            //_dataContainer = JsonUtility.FromJson<DataContainer>(_json);
-            _dataContainer.IsDefaultData = false;
         }
-        else _dataContainer.SetDefaultSettings(growSettings, coinsSpawnSettings);
+        else
+        {
+            //_dataContainer.IsDefaultData = true;
+            //_dataContainer.Height = 0;
+            //_dataContainer.Coins = 0;
+            //_dataContainer.Score = 0;
+            //_dataContainer.TrunkSaveConfig = new List<TrunkSaveConfig>(1) { new TrunkSaveConfig( -3, 0, 0) };
+            //_dataContainer.GrowConfig = new GrowSaveConfig(growSettings);
+            //_dataContainer.CoinsSpawnConfig = new CoinsSaveSettingsConfig(coinsSpawnSettings);
+            _dataContainer.IsDefaultData = true;
+            _dataContainer.Height = 0;
+            _dataContainer.Coins = 0;
+            _dataContainer.Score = 0;
+            _dataContainer.TrunkSaveConfig = new List<TrunkSaveConfig>(1) { new TrunkSaveConfig(-3, 0, 0) };
+            _dataContainer.GrowConfig = new GrowSaveConfig(growSettings);
+            _dataContainer.CoinsSpawnConfig = new CoinsSaveSettingsConfig(coinsSpawnSettings);
+        }
+#else
+        JsonUtility.FromJsonOverwrite(_json, _dataContainer);
+#endif
         IsLoaded = true;
         Debug.Log("DataIsLoaded");
     }
@@ -57,8 +76,13 @@ public class SaveService : MonoBehaviour, IService
 
     public void SaveData()
     {
+#if UNITY_EDITOR
+        //var json = JsonConvert.SerializeObject(_dataContainer, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
         var json = JsonConvert.SerializeObject(_dataContainer, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-        //var json = JsonUtility.ToJson(_dataContainer);
+#else
+        var json = JsonUtility.ToJson(_dataContainer);
+#endif
+        _dataContainer.IsDefaultData = false;
         InteractorWithBrowser.SaveData(json);
 
         Debug.Log("SaveDataToJSON");
@@ -90,7 +114,7 @@ public class SaveService : MonoBehaviour, IService
         foreach(var trunk in  trunks)
         {
             Debug.Log(trunk.GetFilledTopLocalPoint().y / trunk.GetMaxHeight());
-            result.Add(new TrunkSaveConfig(trunk.transform.position, trunk.GetFilledTopLocalPoint().y / trunk.GetMaxHeight(), trunk.Index));
+            result.Add(new TrunkSaveConfig(trunk.transform.position.y, trunk.GetFilledTopLocalPoint().y / trunk.GetMaxHeight(), trunk.Index));
         }
 
         _dataContainer.TrunkSaveConfig = result;
@@ -138,12 +162,6 @@ public class SaveService : MonoBehaviour, IService
     {
         _dataContainer.Coins = coins;
         Debug.Log("SaveCoins");
-    }
-
-    public void SaveCameraPos(Vector3 pos)
-    {
-        _dataContainer.CameraPos = pos;
-        Debug.Log("SaveCameraPos");
     }
 
     public void SaveUpgradePaths(List<UpgradePathSaveConfig> saveConfigs)

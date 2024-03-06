@@ -55,9 +55,9 @@ public class Trunk : MonoBehaviour, IGrowable
 
         _saveService.SaveDataOnQuit += SaveData;
 
-        foreach (var config in _saveService.DataContainer.TrunkSaveConfig.OrderBy(config => config.Position.y))
+        foreach (var config in _saveService.DataContainer.TrunkSaveConfig.OrderBy(config => config.PositionY))
         {
-            SpawnTrunkPart(transform.InverseTransformPoint(config.Position), config.FillValue, config.Index);
+            SpawnTrunkPart(transform.InverseTransformPoint(new Vector2(0, config.PositionY)), config.FillValue, config.Index);
         }
     }
 
