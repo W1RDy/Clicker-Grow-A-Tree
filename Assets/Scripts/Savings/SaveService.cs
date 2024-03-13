@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.IO;
-using Newtonsoft.Json;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine.Networking;
@@ -78,7 +77,7 @@ public class SaveService : MonoBehaviour, IService
     {
 #if UNITY_EDITOR
         //var json = JsonConvert.SerializeObject(_dataContainer, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-        var json = JsonConvert.SerializeObject(_dataContainer, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        var json = JsonUtility.ToJson(_dataContainer);
 #else
         var json = JsonUtility.ToJson(_dataContainer);
 #endif
